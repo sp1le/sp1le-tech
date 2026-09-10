@@ -40,6 +40,7 @@ export const t = {
   railConstraint: { en: 'Constraint', uk: 'Обмеження' },
   railNumbers: { en: 'Numbers', uk: 'Цифри' },
   railRetro: { en: 'Retro', uk: 'Ретро' },
+  railSource: { en: 'Source', uk: 'Код' },
   railMethod: { en: 'Method', uk: 'Метод' },
   railProof: { en: 'Proof', uk: 'Доказ' },
   proofTitle: { en: 'Open it yourself', uk: 'Відкрийте самі' },
@@ -70,7 +71,7 @@ export const t = {
   backToWork: { en: 'All work', uk: 'Усі роботи' },
 
   // Status vocabulary - the palette maps onto these four words.
-  statusLive: { en: 'Running', uk: 'Працює' },
+  statusLive: { en: 'Running', uk: 'Онлайн' },
   statusBuilding: { en: 'In development', uk: 'У розробці' },
   statusHandedOver: { en: 'Handed over', uk: 'Передано' },
   statusPrototype: { en: 'Playable build', uk: 'Ігровий білд' },
@@ -117,6 +118,9 @@ export const t = {
   caseNumbers: { en: 'Size of the thing', uk: 'Масштаб' },
   caseStack: { en: 'Stack', uk: 'Стек' },
   caseRetro: { en: 'What I would change', uk: 'Що змінив би' },
+  caseSource: { en: 'From the source', uk: 'З вихідного коду' },
+  lightboxOpen: { en: 'Open full size', uk: 'Відкрити на весь екран' },
+  lightboxClose: { en: 'Close', uk: 'Закрити' },
   caseVisit: { en: 'Open it', uk: 'Відкрити' },
   caseNext: { en: 'Next', uk: 'Далі' },
   caseNoLinkAccount: {
@@ -131,8 +135,8 @@ export const t = {
   // Work index
   workTitle: { en: 'Work', uk: 'Роботи' },
   workLede: {
-    en: 'Five systems, each with the reasoning kept in. Read the decision record if you want to know how I think; read the retro if you want to know whether I am honest about it.',
-    uk: "П'ять систем, і в кожній збережено хід міркувань. Журнал рішень покаже, як я думаю; ретроспектива - чи чесний я щодо цього.",
+    en: 'Each system here has its reasoning kept in. Read the decision record if you want to know how I think; read the retro if you want to know whether I am honest about it.',
+    uk: 'У кожної системи тут збережено хід міркувань. Журнал рішень покаже, як я думаю; ретроспектива - чи чесний я щодо цього.',
   },
 
   // Services

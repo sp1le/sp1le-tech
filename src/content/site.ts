@@ -9,6 +9,8 @@ export const site = {
   githubLabel: 'github.com/sp1le',
   telegram: 'https://t.me/decimal128',
   telegramLabel: '@decimal128',
+  linkedin: 'https://www.linkedin.com/in/dmitry-stasyuk-996aba424/',
+  linkedinLabel: 'LinkedIn',
   /** Ordered: the first entry is the one I want people to use. */
   role: {
     en: 'Full-cycle software engineer',
@@ -106,8 +108,8 @@ export const principles: Principle[] = [
   {
     title: { en: 'Status is reported, not implied', uk: 'Стан повідомляється, а не мається на увазі' },
     body: {
-      en: 'Two of the five projects on this site are labelled unfinished, because they are. A portfolio that grades everything "complete" is telling you about its author, just not the thing it meant to.',
-      uk: 'Два з пʼяти проєктів на цьому сайті позначені як незавершені, бо вони такі і є. Портфоліо, де все «готово», теж дещо розповідає про автора - просто не те, що збиралося.',
+      en: 'Not everything on this site is finished, and the labels say so. A portfolio that grades everything "complete" is telling you about its author, just not the thing it meant to.',
+      uk: 'Не все на цьому сайті завершене, і позначки так і кажуть. Портфоліо, де все «готово», теж дещо розповідає про автора - просто не те, що збиралося.',
     },
   },
   {

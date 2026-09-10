@@ -1,13 +1,8 @@
 import type { Localized } from '~/lib/i18n';
 
-import replydeckDashboard from '~/assets/img/replydeck-dashboard.png';
-import replydeckAgents from '~/assets/img/replydeck-agents.png';
 import tandyrCatalog from '~/assets/img/tandyr-catalog.png';
 import tandyrCheckout from '~/assets/img/tandyr-checkout.png';
 import tandyrBot from '~/assets/img/tandyr-bot.png';
-import getawayShopfront from '~/assets/img/getaway-shopfront.png';
-import getawayHall from '~/assets/img/getaway-hall.png';
-import getawayStore from '~/assets/img/getaway-store.png';
 
 /**
  * Four states, and the palette maps onto them:
@@ -36,6 +31,13 @@ export interface Shot {
   alt: Localized;
 }
 
+/** A verbatim excerpt from the repository, shown when it says more than a screenshot would. */
+export interface CodeExcerpt {
+  file: string;
+  caption: Localized;
+  source: string;
+}
+
 export interface Project {
   slug: string;
   name: string;
@@ -53,6 +55,7 @@ export interface Project {
   href?: string;
   hrefLabel?: string;
   shots?: Shot[];
+  code?: CodeExcerpt;
 }
 
 export const projects: Project[] = [
@@ -64,12 +67,12 @@ export const projects: Project[] = [
     kind: { en: 'Multi-tenant B2B SaaS', uk: 'Мультитенантний B2B SaaS' },
     runtime: 'Python · FastAPI · PostgreSQL',
     summary: {
-      en: 'Lead discovery and outreach for teams. Second iteration; the first one ran in production and was sold.',
-      uk: 'Пошук і опрацювання лідів для команд. Друга ітерація; перша працювала в проді й була продана.',
+      en: 'Lead discovery and outreach for teams. In development, not yet public.',
+      uk: 'Пошук і опрацювання лідів для команд. У розробці, ще не публічний.',
     },
     intro: {
-      en: 'A platform where a customer organisation runs its own fleet of Telegram accounts, watches public chats for the language its buyers actually use, and turns matches into qualified leads with an outreach trail attached. The first version of this codebase served real tenants at logger.sp1le.tech before I sold it. ReplyDeck is the rebuild, and it is not finished.',
-      uk: 'Платформа, де організація-клієнт тримає власний парк Telegram-акаунтів, стежить за публічними чатами на предмет формулювань, якими говорять її покупці, і перетворює збіги на кваліфіковані ліди з історією комунікації. Перша версія цієї кодової бази обслуговувала реальних клієнтів на logger.sp1le.tech, доки я її не продав. ReplyDeck - це переписування, і воно ще не завершене.',
+      en: 'A platform where a customer organisation runs its own fleet of Telegram accounts, watches public chats for the language its buyers actually use, and turns matches into qualified leads with an outreach trail attached. It is in development and has not been opened to anyone yet, which is why there is nothing to click here.',
+      uk: 'Платформа, де організація-клієнт тримає власний парк Telegram-акаунтів, стежить за публічними чатами на предмет формулювань, якими говорять її покупці, і перетворює збіги на кваліфіковані ліди з історією комунікації. Вона в розробці й ще нікому не відкрита - тому тут нема на що клікнути.',
     },
     constraint: {
       en: 'Many separate customer organisations, each with its own Telegram accounts and its own secrets, all on one modest VPS - with nothing leaking sideways between them. And I am the only person on call for it.',
@@ -144,25 +147,9 @@ export const projects: Project[] = [
     ],
     stack: ['Python', 'FastAPI', 'PostgreSQL', 'Alembic', 'Telethon', 'aiogram', 'Vertex AI', 'S3 / Azure Blob', 'Sentry', 'systemd', 'nginx', 'Docker'],
     retro: {
-      en: 'The first version ran on SQLite and was moved to Postgres underneath a live service. It worked, and the naive-versus-aware datetime mismatch it surfaced still cost more than the migration saved - I would start on Postgres now, not migrate to it. The part I would keep exactly as it is: the tenancy guard having its own test module, because isolation that lives in application code has to be proven, not assumed.',
-      uk: 'Перша версія працювала на SQLite і переїхала на Postgres під живим сервісом. Це спрацювало, але розбіжність naive/aware дат, яку витягнув переїзд, усе одно коштувала більше, ніж міграція зекономила - зараз я починав би одразу на Postgres. Що лишив би точно як є: окремий тестовий модуль для вартового тенантності, бо ізоляцію, яка живе в коді застосунку, треба доводити, а не припускати.',
+      en: 'I named it Sonar and built a landing page, an offer and a domain around that name before opening the trademark register. SonarSource owns SONAR for software, so the product became ReplyDeck before it met a single paying customer. A cheap lesson only because it was learned early: the register comes before the domain. The thing I would keep exactly as it is: the tenancy guard with its own test module, because isolation that lives in application code has to be proven, not assumed.',
+      uk: 'Я назвав його Sonar і зібрав навколо цієї назви лендинг, оферту й домен раніше, ніж відкрив реєстр торгових марок. SonarSource володіє маркою SONAR для софту, тож продукт став ReplyDeck до того, як зустрів першого платного клієнта. Урок дешевий лише тому, що вивчений рано: спочатку реєстр, потім домен. Що лишив би точно як є: вартовий тенантності з окремим тестовим модулем, бо ізоляцію, яка живе в коді застосунку, треба доводити, а не припускати.',
     },
-    shots: [
-      {
-        src: replydeckDashboard,
-        alt: {
-          en: 'ReplyDeck dashboard: lead feed, per-tenant account fleet and scan quota',
-          uk: 'Дашборд ReplyDeck: стрічка лідів, парк акаунтів клієнта та квота сканування',
-        },
-      },
-      {
-        src: replydeckAgents,
-        alt: {
-          en: 'Agent management screen with connected Telegram accounts and their state',
-          uk: 'Екран керування агентами з підключеними Telegram-акаунтами та їхнім станом',
-        },
-      },
-    ],
   },
 
   {
@@ -173,8 +160,8 @@ export const projects: Project[] = [
     kind: { en: 'Telegram commerce, real business', uk: 'Комерція в Telegram, реальний бізнес' },
     runtime: 'FastAPI · aiogram 3 · React · SQLite',
     summary: {
-      en: 'Storefront, bot and public site for a working kitchen: catalogue, cart, Nova Poshta, Monobank.',
-      uk: 'Вітрина, бот і публічний сайт для діючої кухні: каталог, кошик, Нова Пошта, Monobank.',
+      en: "Storefront, bot and public site for a working kitchen: catalogue, cart, and orders that land straight in the staff's Telegram.",
+      uk: 'Вітрина, бот і публічний сайт для діючої кухні: каталог, кошик і замовлення, що прилітають просто в Telegram персоналу.',
     },
     intro: {
       en: 'A food business that takes orders two ways: inside Telegram as a Mini App, and from a plain website for people who will never install a messenger to buy dinner. One catalogue, one order pipeline, one place for staff to work - which happens to be the Telegram they already have open.',
@@ -214,17 +201,17 @@ export const projects: Project[] = [
       },
       {
         choice: {
-          en: 'Nova Poshta and Monobank each have an offline mock mode',
-          uk: 'Нова Пошта і Monobank мають офлайн-режим із моками',
+          en: 'Discounts are scoped rules - one product, a category, or everything - and the most specific rule wins',
+          uk: 'Знижки - це правила з областю дії: товар, категорія або все, і перемагає найконкретніше',
         },
-        instead: { en: 'Talking to the real APIs during development', uk: 'Ходити до справжніх API під час розробки' },
+        instead: { en: 'Editing prices by hand for every promotion', uk: 'Правити ціни руками заради кожної акції' },
         because: {
-          en: 'I am not creating test parcels and test charges against production payment and logistics systems every time I touch checkout.',
-          uk: 'Я не створюватиму тестові посилки й тестові списання в бойових платіжних і логістичних системах щоразу, коли чіпаю оформлення.',
+          en: 'A kitchen runs promotions constantly and forgets to roll them back. A rule with an on/off flag is reverted by flipping it, not by remembering twenty prices.',
+          uk: 'Кухня постійно запускає акції і забуває їх відкотити. Правило з перемикачем відкочується одним кліком, а не памʼяттю про двадцять цін.',
         },
         cost: {
-          en: 'The mocks are a second surface that can drift from the real API, so they are deliberately thin - enough to exercise my code, not enough to pretend they are the vendor.',
-          uk: 'Моки - це друга поверхня, що може розійтися зі справжнім API, тому вони навмисно тонкі: достатньо, щоб ганяти мій код, і замало, щоб удавати вендора.',
+          en: 'Two overlapping rules of the same scope resolve by the larger percentage. That is a policy I chose for them, and it has to be explained every time a 15% and a 20% promotion collide.',
+          uk: 'Два правила однієї області дії розвʼязуються більшим відсотком. Цю політику обрав я, і її доводиться пояснювати щоразу, коли стикаються акції на 15% і 20%.',
         },
       },
       {
@@ -246,7 +233,7 @@ export const projects: Project[] = [
       { value: '15', label: { en: 'Mini App screens', uk: 'екранів Mini App' } },
       { value: '2', label: { en: 'order entry points, one pipeline', uk: 'точки входу замовлень, один конвеєр' } },
     ],
-    stack: ['FastAPI', 'aiogram 3', 'React', 'Vite', 'SQLAlchemy', 'SQLite FTS5', 'Nova Poshta API', 'Monobank Acquiring', 'systemd', 'nginx'],
+    stack: ['FastAPI', 'aiogram 3', 'React', 'Vite', 'SQLAlchemy', 'SQLite FTS5', 'systemd', 'nginx'],
     retro: {
       en: 'The public site came after the Mini App, and the schema still shows the order in which things happened: orders.telegram_id is nullable and every order carries a source of telegram or web, but users and carts are keyed by a Telegram id. A web buyer can place an order and cannot have a cart or a history. That is a real seam, not a cosmetic one. Starting again, the account model would be identity-agnostic from the first migration instead of Telegram-first with a web exception bolted on.',
       uk: 'Публічний сайт зʼявився після Mini App, і схема досі показує, в якому порядку все відбувалося: orders.telegram_id допускає NULL і кожне замовлення має source зі значенням telegram або web, але користувачі й кошики привʼязані до Telegram-id. Покупець із сайту може замовити, але не може мати кошика чи історії. Це справжній шов, а не косметичний. Починаючи знову, модель акаунта була б незалежною від ідентичності з першої міграції, а не Telegram-first із прикрученим винятком для вебу.',
@@ -264,8 +251,8 @@ export const projects: Project[] = [
       {
         src: tandyrCheckout,
         alt: {
-          en: 'Checkout screen with Nova Poshta branch picker and payment choice',
-          uk: 'Екран оформлення з вибором відділення Нової Пошти та способу оплати',
+          en: 'Checkout screen: delivery details, preferred time and a comment for the kitchen',
+          uk: 'Екран оформлення: дані доставки, бажаний час і коментар для кухні',
         },
       },
       {
@@ -283,15 +270,15 @@ export const projects: Project[] = [
     name: 'Getaway',
     period: '2026',
     status: 'prototype',
-    kind: { en: 'Co-op heist FPS, 1-4 players', uk: 'Кооперативний шутер-пограбування, 1-4 гравці' },
+    kind: { en: 'Co-op heist prototype · Photon Fusion + Voice', uk: 'Прототип кооп-пограбування · Photon Fusion + Voice' },
     runtime: 'Unity 6 · C# · Photon Fusion 2',
     summary: {
-      en: 'One dense night block, a pawn shop, a safe and a getaway car. Solo plays end to end.',
-      uk: 'Один щільний нічний квартал, ломбард, сейф і машина для втечі. Соло проходиться повністю.',
+      en: 'Built to see how Photon Fusion and Photon Voice behave in a real scene; grew into a solo heist that plays end to end.',
+      uk: 'Зроблено, щоб побачити, як Photon Fusion і Photon Voice поводяться в реальній сцені; виросло в соло-пограбування, що проходиться повністю.',
     },
     intro: {
-      en: 'A night in a single city block: get into the pawn shop, crack the safe, carry the bags out past guards and police, and drive away while somebody covers the windows. The level, the props, the characters and the UI are not placed by hand - they are produced by editor code, which is the only reason one person can keep a project this size coherent.',
-      uk: 'Ніч в одному міському кварталі: зайти в ломбард, розкрити сейф, винести сумки повз охорону й поліцію і виїхати, поки хтось прикриває вікна. Рівень, реквізит, персонажі та інтерфейс не розставлені руками - їх виробляє код редактора, і лише завдяки цьому одна людина тримає проєкт такого розміру в купі.',
+      en: 'This started as a test bed: I wanted to see how Photon Fusion 2 and Photon Voice 2 behave inside a real scene with doors, guards and a getaway, not inside a vendor demo. It grew into a playable solo heist - get into the pawn shop, crack the safe, carry the bags out past guards and police, drive away. The level, props, characters and UI are produced by editor code, which is the only reason one person could keep a project this size coherent. The multiplayer it was built to exercise has not been run yet: no Photon App Id, so no second player.',
+      uk: 'Це починалося як полігон: я хотів побачити, як Photon Fusion 2 і Photon Voice 2 поводяться в реальній сцені з дверима, охороною і втечею, а не у вендорському демо. Виросло в ігровий соло-режим: зайти в ломбард, розкрити сейф, винести сумки повз охорону й поліцію, поїхати. Рівень, реквізит, персонажі та інтерфейс виробляє код редактора - лише завдяки цьому одна людина тримає проєкт такого розміру в купі. Мультиплеєр, заради якого все й будувалося, ще не запускався: немає Photon App Id, тож немає й другого гравця.',
     },
     constraint: {
       en: 'No art team, no level designer, no budget. Everything the player walks through has to come from free asset packs plus code, and the whole block has to be rebuildable from scratch after any change.',
@@ -370,29 +357,63 @@ export const projects: Project[] = [
       en: 'Networking is integrated and compiles against the real SDKs, but it has never carried four players, because I do not have a Photon App Id yet. I will not call the multiplayer done until I have watched it break under real latency and packet loss - anything else would be a claim I cannot back. Generating everything from code was right for a solo project, and it is the first thing I would reconsider the moment a level designer joined: the tooling that liberates one person becomes a wall for the second.',
       uk: 'Мережа інтегрована й компілюється зі справжніми SDK, але жодного разу не тримала чотирьох гравців, бо в мене поки немає Photon App Id. Я не називатиму мультиплеєр готовим, доки не побачу, як він ламається на реальних затримках і втратах пакетів - усе інше було б заявою, яку я не можу підкріпити. Генерувати все кодом було правильно для соло-проєкту, і це перше, що я переглянув би тієї миті, коли зʼявиться левел-дизайнер: інструмент, який звільняє одного, стає стіною для другого.',
     },
-    shots: [
-      {
-        src: getawayShopfront,
-        alt: {
-          en: 'The lit pawn shop front on the night street, with parked cars along the kerb',
-          uk: 'Освітлений фасад ломбарду на нічній вулиці, уздовж бордюру припарковані машини',
-        },
+    code: {
+      file: 'Assets/_Game/Scripts/Editor/GetawayLevelKit.cs',
+      caption: {
+        en: 'The stairs decision in code: each step is a cube with its collider stripped, and one hidden, rotated slab underneath is what the player and the NavMesh actually stand on. Two of the three comments are mine for this page; the rest is verbatim.',
+        uk: 'Рішення про сходи в коді: кожна сходинка - куб зі знятим колайдером, а під ними одна прихована повернута плита, на якій насправді стоять гравець і NavMesh. Два з трьох коментарів дописані для цієї сторінки, решта - дослівно.',
       },
-      {
-        src: getawayHall,
-        alt: {
-          en: 'Trading hall of the pawn shop: counter, display cases and the door to the back office',
-          uk: 'Торговий зал ломбарду: прилавок, вітрини та двері до кабінету',
-        },
-      },
-      {
-        src: getawayStore,
-        alt: {
-          en: 'The corner store interior with shelving rows, fridges and the till by the entrance',
-          uk: 'Інтерʼєр магазину біля дому: ряди стелажів, холодильники та каса біля входу',
-        },
-      },
-    ],
+      source: `public static void Stairs(Transform parent, string name, Vector3 start, Vector3 direction, float run,
+    float rise, float width, int steps, Material material)
+{
+    var root = Empty(name, parent, Vector3.zero).transform;
+    Vector3 dir = new Vector3(direction.x, 0f, direction.z).normalized;
+    Vector3 side = Vector3.Cross(Vector3.up, dir);
+
+    float stepRun = run / steps;
+    float stepRise = rise / steps;
+
+    for (int i = 0; i < steps; i++)
+    {
+        float top = start.y + stepRise * (i + 1);
+        Vector3 centre = start + dir * (stepRun * (i + 0.5f));
+        centre.y = top - stepRise * 0.5f;
+
+        var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        go.name = "Step";
+        go.transform.SetParent(root, false);
+        go.transform.localPosition = centre;
+        go.transform.localRotation = Quaternion.LookRotation(dir, Vector3.up);
+        go.transform.localScale = new Vector3(width, stepRise, stepRun);
+        go.GetComponent<MeshRenderer>().sharedMaterial = material;
+        Object.DestroyImmediate(go.GetComponent<Collider>());   // the eye gets steps
+    }
+
+    BuildRamp(root, start, dir, side, run, rise, width);        // the feet get a slope
+}
+
+private static void BuildRamp(Transform parent, Vector3 start, Vector3 dir, Vector3 side,
+    float run, float rise, float width)
+{
+    const float thickness = 0.4f;
+    float slope = Mathf.Sqrt(run * run + rise * rise);
+
+    Vector3 alongSlope = (dir * run + Vector3.up * rise).normalized;
+    Quaternion rotation = Quaternion.LookRotation(alongSlope, Vector3.Cross(alongSlope, side).normalized);
+
+    // Sit the ramp so its top face passes through the step noses.
+    Vector3 topMid = start + dir * (run * 0.5f) + Vector3.up * (rise * 0.5f);
+    Vector3 centre = topMid - rotation * Vector3.up * (thickness * 0.5f);
+
+    var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+    go.name = "RampCollider";
+    go.transform.SetParent(parent, false);
+    go.transform.localPosition = centre;
+    go.transform.localRotation = rotation;
+    go.transform.localScale = new Vector3(width, thickness, slope);
+    go.GetComponent<MeshRenderer>().enabled = false;            // never drawn, always walked on
+}`,
+    },
   },
 
   {
@@ -482,80 +503,6 @@ export const projects: Project[] = [
     hrefLabel: 'sp1le.tech/voiceduel',
   },
 
-  {
-    slug: 'coopvoice',
-    name: 'CoopVoice',
-    period: '2026',
-    status: 'prototype',
-    kind: { en: 'Proximity voice prototype', uk: 'Прототип голосу за відстанню' },
-    runtime: 'Unity 6 · Photon Voice 2',
-    summary: {
-      en: 'Voice that falls off with distance, muffles through walls and takes on the reverb of the room.',
-      uk: 'Голос, що згасає з відстанню, глухне крізь стіни й набирає відлуння приміщення.',
-    },
-    intro: {
-      en: 'Two players in one scene hear each other by distance. A wall between them makes the voice muffled rather than silent, a stairwell adds its own reverb, and a debug overlay shows the distance, occlusion and level behind every voice so the behaviour can be argued about with numbers instead of impressions.',
-      uk: 'Двоє гравців в одній сцені чують одне одного за відстанню. Стіна між ними робить голос глухим, а не беззвучним, сходова клітка додає власне відлуння, а службовий оверлей показує відстань, перекриття й рівень за кожним голосом - щоб про поведінку можна було сперечатися цифрами, а не враженнями.',
-    },
-    constraint: {
-      en: 'Proximity voice has to be convincing enough that players stop noticing it, while running on whatever voice transport happens to be affordable that year.',
-      uk: 'Голос за відстанню має бути переконливим настільки, щоб гравці перестали його помічати, і при цьому працювати на тому голосовому транспорті, який цьогоріч по кишені.',
-    },
-    decisions: [
-      {
-        choice: { en: 'The audio layer knows nothing about Photon', uk: 'Аудіошар нічого не знає про Photon' },
-        instead: {
-          en: 'Wiring occlusion and reverb straight into the Photon speaker components',
-          uk: 'Вшити перекриття й ревер прямо в компоненти динаміків Photon',
-        },
-        because: {
-          en: 'Voice transports get repriced, deprecated and replaced. If the spatial behaviour is transport-agnostic, swapping the network layer touches Network/ and nothing else.',
-          uk: 'Голосові транспорти дорожчають, застарівають і замінюються. Якщо просторова поведінка не залежить від транспорту, заміна мережевого шару чіпає Network/ і більше нічого.',
-        },
-        cost: {
-          en: 'An indirection layer maintained for a prototype that currently has exactly one transport.',
-          uk: 'Шар непрямості, який доводиться підтримувати заради прототипу з рівно одним транспортом.',
-        },
-      },
-      {
-        choice: {
-          en: 'Occlusion is one raycast to the listener driving a low-pass filter',
-          uk: 'Перекриття - один промінь до слухача, що керує фільтром низьких частот',
-        },
-        instead: { en: 'Acoustic simulation with portals and diffraction', uk: 'Акустична симуляція з порталами й дифракцією' },
-        because: {
-          en: 'A single ray is cheap enough to run per speaker per frame and answers the only question players consciously notice: is there something between us.',
-          uk: 'Один промінь достатньо дешевий, щоб рахувати його на кожен голос щокадру, і відповідає на єдине питання, яке гравці свідомо помічають: чи є щось між нами.',
-        },
-        cost: {
-          en: 'Someone behind a thin pillar sounds exactly as muffled as someone behind a bank vault.',
-          uk: 'Той, хто за тонкою колоною, звучить так само глухо, як той, хто за банківським сховищем.',
-        },
-      },
-      {
-        choice: { en: 'Reverb presets are data that can be interpolated', uk: 'Пресети ревера - це дані, які можна інтерполювати' },
-        instead: { en: 'Switching Unity reverb zones on and off', uk: 'Вмикати й вимикати зони ревера Unity' },
-        because: {
-          en: 'Hard switching is audible at the boundary and immediately sounds cheap. Blending between presets turns walking into a stairwell into a transition instead of a click.',
-          uk: 'Різке перемикання чути на межі й воно одразу звучить дешево. Перехід між пресетами робить вхід у сходову клітку переходом, а не клацанням.',
-        },
-        cost: {
-          en: 'Zone priority and blending become my problem rather than the engine’s.',
-          uk: 'Пріоритет зон і змішування стають моєю проблемою, а не проблемою рушія.',
-        },
-      },
-    ],
-    metrics: [
-      { value: '932', label: { en: 'lines of C#', uk: 'рядків C#' } },
-      { value: '12', label: { en: 'scripts, audio split from network', uk: 'скриптів, аудіо відокремлено від мережі' } },
-      { value: '1', label: { en: 'raycast per voice per frame', uk: 'промінь на голос за кадр' } },
-    ],
-    stack: ['Unity 6000.3.11f1', 'C#', 'Photon Fusion 2', 'Photon Voice 2', 'Unity Audio'],
-    retro: {
-      en: 'It is a prototype with two players in one scene, and I say so. It has never met a full lobby, and the occlusion ray needs a real budget before a dozen speakers exist - most likely a staggered update rather than every voice every frame. The part I would keep unchanged is the seam between audio and networking; it is the only reason this is reusable at all.',
-      uk: 'Це прототип із двома гравцями в одній сцені, і я так і кажу. Він жодного разу не бачив повного лобі, а променю перекриття потрібен реальний бюджет ще до того, як голосів стане з десяток - найімовірніше, розподілене оновлення замість «кожен голос щокадру». Що я лишив би без змін - це шов між аудіо й мережею; лише завдяки йому це взагалі можна перевикористати.',
-    },
-  },
 ];
 
 export const featured = projects;

@@ -12,9 +12,11 @@ interface Props {
   /** Path without locale prefix, e.g. "/work/sonar". Used for hreflang alternates. */
   path: string;
   ogImage?: string;
+  /** Ambient light behind the top of the page. Only the home page asks for it. */
+  glow?: boolean;
 }
 
-const { locale, title, description, path, ogImage = '/og.png' } = Astro.props;
+const { locale, title, description, path, ogImage = '/og.png', glow = false } = Astro.props;
 
 const meta = LOCALE_META[locale];
 const canonicalPath = localizePath(path, locale);
@@ -29,7 +31,7 @@ const personLd = {
   url: site.url,
   email: `mailto:${site.email}`,
   jobTitle: site.role[locale],
-  sameAs: [site.github, site.telegram],
+  sameAs: [site.github, site.telegram, site.linkedin],
   knowsAbout: ['Python', 'FastAPI', 'PostgreSQL', 'TypeScript', 'React', 'Node.js', 'Unity', 'C#', 'Telegram Bot API'],
 };
 ---
@@ -97,7 +99,7 @@ const personLd = {
 
     <Header locale={locale} path={bare} />
 
-    <main id="main" tabindex="-1">
+    <main id="main" tabindex="-1" class:list={[glow && 'has-glow']}>
       <slot />
     </main>
 

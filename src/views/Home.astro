@@ -45,11 +45,10 @@ const description =
     : 'I design, build, deploy and operate complete products alone: Python SaaS, Telegram commerce, Unity, realtime browser games. Case studies with a decision record and an honest status.';
 ---
 
-<Base locale={locale} title={title} description={description} path="/">
+<Base locale={locale} title={title} description={description} path="/" glow>
   <div class="mx-auto max-w-[78rem] px-5 sm:px-8">
     {/* Hero: the thesis, the thesis drawn as a system, then the evidence. */}
     <section class="relative pt-16 pb-10 sm:pt-24 sm:pb-14">
-      <div class="glow" aria-hidden="true"></div>
 
       <p class="tick lift text-soft">{t.heroEyebrow[locale]}</p>
 
@@ -83,18 +82,13 @@ const description =
     </section>
 
     <div class="space-y-20 pb-4 sm:space-y-28">
-      <Section
-        label={t.railManifest[locale]}
+      <Manifest
+        locale={locale}
         notes={[
-          t.manifestNote[locale],
-          locale === 'uk'
-            ? `${liveCount} працює, ${unfinished} незавершені`
-            : `${liveCount} running, ${unfinished} unfinished`,
+          locale === 'uk' ? `${liveCount} працює · ${unfinished} незавершені` : `${liveCount} running · ${unfinished} unfinished`,
           locale === 'uk' ? `зібрано ${built}` : `compiled ${built}`,
         ]}
-      >
-        <Manifest locale={locale} />
-      </Section>
+      />
 
       <Section
         label={t.railDecisions[locale]}

@@ -181,6 +181,11 @@
     color: var(--signal);
   }
 
+  /* Marginalia can be a file path with no spaces; it must wrap, never overlap. */
+  .rail-aside li {
+    overflow-wrap: anywhere;
+  }
+
   @media (min-width: 1024px) {
     .rail {
       grid-template-columns: 12rem minmax(0, 1fr);
@@ -243,13 +248,70 @@
     text-decoration-color: var(--signal);
   }
 
-  /* Ambient light behind the hero, and nowhere else. */
-  .glow {
+  /* Ambient light behind the top of the home page. It lives on <main>, which
+     spans the viewport, so the gradient fades out long before any box edge. */
+  .has-glow {
+    position: relative;
+  }
+
+  .has-glow::before {
+    content: '';
     position: absolute;
-    inset: -20% -10% auto -10%;
-    height: 90%;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: min(72vh, 44rem);
     pointer-events: none;
-    background: radial-gradient(ellipse 48% 55% at 82% 22%, var(--signal-glow), transparent 70%);
+    background: radial-gradient(ellipse 42% 62% at 76% 6%, var(--signal-glow), transparent 68%);
+  }
+
+  .code-block {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--paper-sunk);
+    padding: 1.1rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    tab-size: 4;
+  }
+
+  .lightbox {
+    margin: auto; /* preflight zeroes dialog margins; modal centring needs them back */
+    max-width: min(94vw, 96rem);
+    max-height: 94vh;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .lightbox::backdrop {
+    background: oklch(8% 0.01 266 / 0.86);
+  }
+
+  .lightbox img {
+    max-height: 90vh;
+    max-width: 94vw;
+    width: auto;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--paper-raise);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    margin-bottom: 0.75rem;
+    color: var(--ink);
+    background: var(--paper-raise);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.55rem 0.9rem;
+    cursor: pointer;
   }
 
   /* Page-load sequence: one orchestrated moment, only on first paint. */

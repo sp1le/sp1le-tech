@@ -92,7 +92,7 @@ const live = projects.filter((p) => p.status === 'live');
                 <a href={localizePath(`/work/${project.slug}`, locale)} class="link-quiet font-display font-semibold">
                   {project.name}
                 </a>
-                <a href={project.href} rel="noopener" class="font-mono text-xs text-signal hover:opacity-70">
+                <a href={project.href} target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-signal hover:opacity-70">
                   {project.hrefLabel}
                 </a>
                 <span class="text-sm text-faint">{project.kind[locale]}</span>
