@@ -1,0 +1,40 @@
+---
+import { site } from '~/content/site';
+import { localizePath, t, type Locale } from '~/lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-rule sm:mt-32">
+  <div class="mx-auto max-w-[78rem] px-5 py-10 sm:px-8">
+    <div class="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="font-display text-head font-semibold tracking-tight text-ink">
+          {site.person}
+        </p>
+        <p class="mt-1 text-sm text-soft">{site.role[locale]}</p>
+      </div>
+
+      <ul class="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <li>
+          <a class="link-quiet font-mono text-sm" href={`mailto:${site.email}`}>{site.email}</a>
+        </li>
+        <li>
+          <a class="link-quiet font-mono text-sm" href={site.github} rel="me noopener">{site.githubLabel}</a>
+        </li>
+        <li>
+          <a class="link-quiet font-mono text-sm" href={localizePath('/work', locale)}>{t.navWork[locale]}</a>
+        </li>
+      </ul>
+    </div>
+
+    <p class="tick mt-10 text-faint">
+      © {year} {site.name} · {t.footerNote[locale]}
+    </p>
+  </div>
+</footer>

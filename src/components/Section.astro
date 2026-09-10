@@ -1,0 +1,38 @@
+---
+/**
+ * The annotation rail: content on the right, marginalia on the left.
+ * On wide screens the aside is sticky and separated by a hairline, the way a
+ * margin behaves in a printed spec. Below 1024px it folds above its content
+ * rather than disappearing, because the notes are content too.
+ */
+interface Props {
+  label: string;
+  notes?: string[];
+  id?: string;
+  class?: string;
+  as?: 'section' | 'div' | 'article';
+}
+
+// Annotated explicitly: renaming `as` to a capitalised component variable defeats
+// Astro's automatic Props inference for the rest of the destructure.
+const { label, notes = [], id, class: className = '', as: Tag = 'section' }: Props = Astro.props;
+---
+
+<Tag id={id} class:list={['rail scroll-mt-24', className]}>
+  <div class="rail-aside">
+    <p class="tick text-ink">{label}</p>
+    {
+      notes.length > 0 && (
+        <ul class="mt-3 space-y-2 lg:mt-4">
+          {notes.map((note) => (
+            <li class="font-mono text-[0.6875rem] leading-relaxed text-faint">{note}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+
+  <div class="min-w-0">
+    <slot />
+  </div>
+</Tag>

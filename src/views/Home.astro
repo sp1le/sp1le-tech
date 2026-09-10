@@ -1,0 +1,179 @@
+---
+import Base from '~/layouts/Base.astro';
+import Section from '~/components/Section.astro';
+import Manifest from '~/components/Manifest.astro';
+import DecisionCard from '~/components/DecisionCard.astro';
+import Contact from '~/components/Contact.astro';
+import { highlightedDecisions, projectBySlug, projects } from '~/content/projects';
+import { services, stack } from '~/content/site';
+import { localizePath, t, type Locale } from '~/lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const built = new Date().toISOString().slice(0, 10);
+const liveCount = projects.filter((p) => p.status === 'live').length;
+const totalDecisions = projects.reduce((sum, p) => sum + p.decisions.length, 0);
+const unfinished = projects.length - liveCount;
+
+const picks = highlightedDecisions
+  .map(({ slug, index }) => {
+    const project = projectBySlug(slug);
+    const decision = project?.decisions[index];
+    return project && decision ? { project, decision } : null;
+  })
+  .filter((entry): entry is { project: NonNullable<ReturnType<typeof projectBySlug>>; decision: NonNullable<ReturnType<typeof projectBySlug>>['decisions'][number] } => entry !== null);
+
+const stackLabels = {
+  daily: t.stackDaily[locale],
+  working: t.stackWorking[locale],
+  tried: t.stackTried[locale],
+} as const;
+
+const title =
+  locale === 'uk'
+    ? 'sp1le - Дмитро Стасюк, інженер повного циклу'
+    : 'sp1le - Dmytro Stasiuk, full-cycle software engineer';
+
+const description =
+  locale === 'uk'
+    ? 'Проєктую, пишу, розгортаю і супроводжую продукти самостійно: SaaS на Python, комерція в Telegram, Unity, реалтайм у браузері. Кейси з журналом рішень і чесним станом.'
+    : 'I design, build, deploy and operate complete products alone: Python SaaS, Telegram commerce, Unity, realtime browser games. Case studies with a decision record and an honest status.';
+---
+
+<Base locale={locale} title={title} description={description} path="/">
+  <div class="mx-auto max-w-[78rem] px-5 sm:px-8">
+    {/* Hero: the thesis, then immediately the evidence. */}
+    <section class="pt-16 pb-10 sm:pt-24 sm:pb-14">
+      <p class="tick lift text-soft">{t.heroEyebrow[locale]}</p>
+
+      <h1
+        class="lift mt-6 max-w-[19ch] text-mega font-display font-semibold text-ink"
+        style="animation-delay: 60ms"
+      >
+        {t.heroTitle[locale]}
+      </h1>
+
+      <p class="lift mt-8 max-w-2xl text-base leading-relaxed text-soft sm:text-lg" style="animation-delay: 110ms">
+        {t.heroLede[locale]}
+      </p>
+
+      <div class="lift mt-9 flex flex-wrap items-center gap-3" style="animation-delay: 150ms">
+        <a
+          href={localizePath('/work', locale)}
+          class="inline-flex h-11 items-center rounded-sm bg-ink px-5 font-mono text-sm font-semibold text-paper transition-opacity hover:opacity-85"
+        >
+          {t.navWork[locale]}
+        </a>
+        <a
+          href={localizePath('/services', locale)}
+          class="inline-flex h-11 items-center rounded-sm border border-rule px-5 font-mono text-sm text-soft transition-colors hover:border-ink hover:text-ink"
+        >
+          {t.navServices[locale]}
+        </a>
+      </div>
+    </section>
+
+    <div class="space-y-20 pb-4 sm:space-y-28">
+      <Section
+        label={t.railManifest[locale]}
+        notes={[
+          t.manifestNote[locale],
+          locale === 'uk'
+            ? `${liveCount} працює, ${unfinished} незавершені`
+            : `${liveCount} running, ${unfinished} unfinished`,
+          locale === 'uk' ? `зібрано ${built}` : `compiled ${built}`,
+        ]}
+      >
+        <Manifest locale={locale} />
+      </Section>
+
+      <Section
+        label={t.railDecisions[locale]}
+        notes={[
+          locale === 'uk' ? `три з ${totalDecisions} записів` : `three of ${totalDecisions} records`,
+          locale === 'uk' ? 'повні журнали - у кейсах' : 'full records live in the case studies',
+        ]}
+      >
+        <h2 class="text-title font-display font-semibold text-ink">{t.decisionsTitle[locale]}</h2>
+        <p class="measure mt-4 text-soft">{t.decisionsNote[locale]}</p>
+
+        <div class="mt-10 space-y-10">
+          {
+            picks.map(({ project, decision }) => (
+              <DecisionCard
+                decision={decision}
+                locale={locale}
+                source={{ name: project.name, href: localizePath(`/work/${project.slug}`, locale) }}
+              />
+            ))
+          }
+        </div>
+      </Section>
+
+      <Section
+        label={t.railStack[locale]}
+        notes={[t.stackNote[locale]]}
+      >
+        <h2 class="text-title font-display font-semibold text-ink">{t.stackTitle[locale]}</h2>
+
+        <dl class="mt-10 space-y-8">
+          {
+            stack.map((group) => (
+              <div class="border-t border-rule pt-5">
+                <dt class="tick text-ink">{stackLabels[group.key]}</dt>
+                <dd class="mt-3">
+                  <ul class="flex flex-wrap gap-x-2 gap-y-2">
+                    {group.items.map((item) => (
+                      <li
+                        class:list={[
+                          'rounded-sm border px-2.5 py-1 font-mono text-xs',
+                          group.key === 'tried'
+                            ? 'border-rule-soft text-faint'
+                            : 'border-rule bg-raise text-soft',
+                        ]}
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <p class="measure mt-3 text-sm text-faint">{group.note[locale]}</p>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </Section>
+
+      <Section
+        label={t.railFit[locale]}
+        notes={[locale === 'uk' ? 'два способи почати' : 'two ways to start']}
+      >
+        <h2 class="text-title font-display font-semibold text-ink">{t.servicesTitle[locale]}</h2>
+        <p class="measure mt-4 text-soft">{t.servicesLede[locale]}</p>
+
+        <ul class="mt-10 grid gap-6 sm:grid-cols-2">
+          {
+            services.map((offer) => (
+              <li class="rounded-sm border border-rule bg-raise p-5">
+                <h3 class="font-display text-head font-semibold text-ink">{offer.title[locale]}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-soft">{offer.body[locale]}</p>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="mt-6">
+          <a href={localizePath('/services', locale)} class="link-quiet font-mono text-sm">
+            {t.servicesTitle[locale]} →
+          </a>
+        </p>
+      </Section>
+
+      <Contact locale={locale} />
+    </div>
+  </div>
+</Base>

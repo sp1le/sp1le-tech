@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sp1le.tech/sitemap-index.xml

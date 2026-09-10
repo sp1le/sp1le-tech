@@ -1,0 +1,12 @@
+---
+import CaseStudy from '~/views/CaseStudy.astro';
+import { projects } from '~/content/projects';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths = (() =>
+  projects.map((project) => ({ params: { slug: project.slug }, props: { project } }))) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+---
+
+<CaseStudy locale="en" project={project} />

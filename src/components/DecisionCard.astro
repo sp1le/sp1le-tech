@@ -1,0 +1,48 @@
+---
+import type { Decision } from '~/content/projects';
+import { t, type Locale } from '~/lib/i18n';
+
+interface Props {
+  decision: Decision;
+  locale: Locale;
+  /** Shown above the choice when the decision is quoted away from its case study. */
+  source?: { name: string; href: string };
+}
+
+const { decision, locale, source } = Astro.props;
+
+/**
+ * Four fixed fields, always in this order. The last one is the point: a decision
+ * without a stated cost is a preference wearing a lab coat.
+ */
+const fields = [
+  { label: t.labelInstead[locale], value: decision.instead[locale], tone: 'text-faint line-through decoration-rule' },
+  { label: t.labelBecause[locale], value: decision.because[locale], tone: 'text-soft' },
+  { label: t.labelCost[locale], value: decision.cost[locale], tone: 'text-soft' },
+];
+---
+
+<article class="border-t border-rule pt-5">
+  {
+    source && (
+      <a href={source.href} class="tick mb-3 inline-block text-signal transition-opacity hover:opacity-70">
+        {source.name}
+      </a>
+    )
+  }
+
+  <h3 class="text-head font-display font-semibold text-balance text-ink">
+    {decision.choice[locale]}
+  </h3>
+
+  <dl class="mt-4 space-y-3">
+    {
+      fields.map((field) => (
+        <div class="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-[7.5rem_minmax(0,1fr)]">
+          <dt class="tick pt-1">{field.label}</dt>
+          <dd class:list={['text-sm leading-relaxed', field.tone]}>{field.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</article>

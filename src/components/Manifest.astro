@@ -1,0 +1,56 @@
+---
+import StatusTag from '~/components/StatusTag.astro';
+import { projects, type Status } from '~/content/projects';
+import { localizePath, t, type Locale } from '~/lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+/** Ordered by state rather than by how proud I am of each one. */
+const rank: Record<Status, number> = { live: 0, building: 1, prototype: 2, handedOver: 3 };
+const rows = [...projects].sort((a, b) => rank[a.status] - rank[b.status]);
+---
+
+<div class="border-t border-rule">
+  <p class="sr-only" id="manifest-caption">{t.manifestNote[locale]}</p>
+
+  {/* Column heads earn their keep only when there is room for four columns. */}
+  <div
+    class="hidden border-b border-rule py-2 lg:grid lg:grid-cols-[minmax(0,10rem)_minmax(0,1fr)_minmax(0,15rem)_minmax(0,8rem)] lg:gap-6"
+    aria-hidden="true"
+  >
+    <span class="tick">{t.colProject[locale]}</span>
+    <span class="tick">{t.colWhat[locale]}</span>
+    <span class="tick">{t.colRuntime[locale]}</span>
+    <span class="tick">{t.colStatus[locale]}</span>
+  </div>
+
+  <ul class="divide-y divide-rule" aria-describedby="manifest-caption">
+    {
+      rows.map((project, i) => (
+        <li class="lift" style={`animation-delay: ${140 + i * 70}ms`}>
+          <a
+            href={localizePath(`/work/${project.slug}`, locale)}
+            class="group grid grid-cols-1 gap-x-6 gap-y-2 py-5 transition-colors hover:bg-sunk/60 focus-visible:bg-sunk/60 lg:grid-cols-[minmax(0,11rem)_minmax(0,1fr)_minmax(0,14rem)_minmax(0,8rem)] lg:items-baseline"
+          >
+            <span class="flex items-baseline justify-between gap-3 lg:block">
+              <span class="font-display text-lg font-semibold tracking-tight text-ink transition-colors group-hover:text-signal sm:text-xl">
+                {project.name}
+              </span>
+              <StatusTag status={project.status} locale={locale} class="lg:hidden" />
+            </span>
+
+            <span class="text-sm leading-snug text-soft">{project.summary[locale]}</span>
+
+            <span class="font-mono text-xs text-faint">{project.runtime}</span>
+
+            <StatusTag status={project.status} locale={locale} class="hidden lg:inline-flex" />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>

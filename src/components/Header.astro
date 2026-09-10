@@ -1,0 +1,76 @@
+---
+import ThemeToggle from '~/components/ThemeToggle.astro';
+import { LOCALES, LOCALE_META, localizePath, t, type Locale } from '~/lib/i18n';
+
+interface Props {
+  locale: Locale;
+  /** Current path with no locale prefix, so the language switch stays on the same page. */
+  path: string;
+}
+
+const { locale, path } = Astro.props;
+
+const links = [
+  { href: '/work', label: t.navWork[locale], always: true },
+  { href: '/services', label: t.navServices[locale], always: true },
+  // Contact is one tap away in the hero and the footer, so it yields the space
+  // a phone header does not have.
+  { href: '/#contact', label: t.navContact[locale], always: false },
+];
+
+const current = path.replace(/\/$/, '') || '/';
+
+/** One switch to the other language reads better than two labels, and fits a phone. */
+const other = LOCALES.find((l) => l !== locale) ?? locale;
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-rule bg-paper/85 backdrop-blur-sm supports-[backdrop-filter]:bg-paper/70"
+>
+  <div class="mx-auto flex h-14 max-w-[78rem] items-center gap-3 px-5 sm:h-16 sm:gap-6 sm:px-8">
+    <a
+      href={localizePath('/', locale)}
+      class="font-mono text-sm font-semibold tracking-tight text-ink transition-colors hover:text-signal"
+      aria-label="sp1le - home"
+    >
+      sp1le<span class="text-signal">.</span>tech
+    </a>
+
+    <nav class="ms-auto" aria-label={t.menu[locale]}>
+      <ul class="flex items-center gap-3 sm:gap-6">
+        {
+          links.map((link) => {
+            const active = current === link.href;
+            return (
+              <li>
+                <a
+                  href={localizePath(link.href, locale)}
+                  aria-current={active ? 'page' : undefined}
+                  class:list={[
+                    'tick whitespace-nowrap transition-colors hover:text-ink',
+                    active ? 'text-ink' : 'text-soft',
+                    link.always ? '' : 'hidden sm:inline',
+                  ]}
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-1 border-l border-rule ps-3 sm:ps-4">
+      <a
+        href={localizePath(path, other)}
+        hreflang={LOCALE_META[other].htmlLang}
+        title={LOCALE_META[other].name}
+        class="tick rounded px-1 py-1 text-soft transition-colors hover:text-ink"
+      >
+        {LOCALE_META[other].label}
+      </a>
+      <ThemeToggle locale={locale} />
+    </div>
+  </div>
+</header>

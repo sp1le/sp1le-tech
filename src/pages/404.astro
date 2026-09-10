@@ -1,0 +1,35 @@
+---
+import Base from '~/layouts/Base.astro';
+import { localizePath, t } from '~/lib/i18n';
+
+// A single 404 for both locales: the server cannot know which language a wrong
+// URL was aiming at, so it answers in the default one and offers the way back.
+const locale = 'en' as const;
+---
+
+<Base locale={locale} title="404 · sp1le" description={t.notFoundLede[locale]} path="/404">
+  <div class="mx-auto max-w-[78rem] px-5 sm:px-8">
+    <section class="flex min-h-[60vh] flex-col justify-center py-20">
+      <p class="tick text-flag">404</p>
+      <h1 class="mt-6 max-w-[14ch] text-mega font-display font-semibold text-ink">
+        {t.notFoundTitle[locale]}
+      </h1>
+      <p class="mt-6 max-w-xl leading-relaxed text-soft">{t.notFoundLede[locale]}</p>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a
+          href={localizePath('/work', locale)}
+          class="inline-flex h-11 items-center rounded-sm bg-ink px-5 font-mono text-sm font-semibold text-paper transition-opacity hover:opacity-85"
+        >
+          {t.navWork[locale]}
+        </a>
+        <a
+          href={localizePath('/', locale)}
+          class="inline-flex h-11 items-center rounded-sm border border-rule px-5 font-mono text-sm text-soft transition-colors hover:border-ink hover:text-ink"
+        >
+          sp1le.tech
+        </a>
+      </div>
+    </section>
+  </div>
+</Base>

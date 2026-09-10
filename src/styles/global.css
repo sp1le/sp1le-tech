@@ -1,0 +1,262 @@
+@import 'tailwindcss';
+@import './fonts.css';
+
+/*
+ * Palette rationale
+ * -----------------
+ * Cool chalk paper + blue-cast ink: a spec sheet, not a warm editorial page.
+ * Exactly two hues carry meaning, and each has one job:
+ *   signal (ultramarine) - links, active state, anything currently running
+ *   flag   (amber)       - work that is still in development
+ * A third state, "shipped and handed over", is deliberately colourless.
+ * That way the palette itself reports project status instead of decorating it.
+ */
+
+:root {
+  color-scheme: light;
+
+  --paper: oklch(96.4% 0.005 258);
+  --paper-raise: oklch(99.3% 0.003 258);
+  --paper-sunk: oklch(93.4% 0.007 258);
+
+  --ink: oklch(22% 0.022 266);
+  --ink-soft: oklch(46% 0.018 266);
+  --ink-faint: oklch(60% 0.013 264);
+
+  --rule: oklch(86.5% 0.009 260);
+  --rule-soft: oklch(91.5% 0.006 258);
+
+  --signal: oklch(47% 0.185 264);
+  --signal-quiet: oklch(47% 0.185 264 / 0.09);
+  --flag: oklch(54% 0.135 62);
+  --flag-quiet: oklch(54% 0.135 62 / 0.11);
+
+  --shadow-raise: 0 1px 2px oklch(22% 0.022 266 / 0.05), 0 8px 24px -16px oklch(22% 0.022 266 / 0.28);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: oklch(17.5% 0.014 266);
+  --paper-raise: oklch(21.5% 0.016 266);
+  --paper-sunk: oklch(14.5% 0.012 266);
+
+  --ink: oklch(93.5% 0.007 260);
+  --ink-soft: oklch(68% 0.014 262);
+  --ink-faint: oklch(55% 0.014 264);
+
+  --rule: oklch(30.5% 0.016 264);
+  --rule-soft: oklch(25% 0.014 264);
+
+  --signal: oklch(74% 0.135 258);
+  --signal-quiet: oklch(74% 0.135 258 / 0.14);
+  --flag: oklch(78% 0.125 68);
+  --flag-quiet: oklch(78% 0.125 68 / 0.14);
+
+  --shadow-raise: 0 1px 2px oklch(0% 0 0 / 0.4), 0 8px 24px -16px oklch(0% 0 0 / 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --paper: oklch(17.5% 0.014 266);
+    --paper-raise: oklch(21.5% 0.016 266);
+    --paper-sunk: oklch(14.5% 0.012 266);
+
+    --ink: oklch(93.5% 0.007 260);
+    --ink-soft: oklch(68% 0.014 262);
+    --ink-faint: oklch(55% 0.014 264);
+
+    --rule: oklch(30.5% 0.016 264);
+    --rule-soft: oklch(25% 0.014 264);
+
+    --signal: oklch(74% 0.135 258);
+    --signal-quiet: oklch(74% 0.135 258 / 0.14);
+    --flag: oklch(78% 0.125 68);
+    --flag-quiet: oklch(78% 0.125 68 / 0.14);
+
+    --shadow-raise: 0 1px 2px oklch(0% 0 0 / 0.4), 0 8px 24px -16px oklch(0% 0 0 / 0.6);
+  }
+}
+
+@theme inline {
+  --font-display: 'Geologica', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', 'Consolas', monospace;
+
+  --color-paper: var(--paper);
+  --color-raise: var(--paper-raise);
+  --color-sunk: var(--paper-sunk);
+  --color-ink: var(--ink);
+  --color-soft: var(--ink-soft);
+  --color-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-signal: var(--signal);
+  --color-signal-quiet: var(--signal-quiet);
+  --color-flag: var(--flag);
+  --color-flag-quiet: var(--flag-quiet);
+
+  --shadow-raise: var(--shadow-raise);
+
+  /* Type scale - display sizes are fluid, text sizes are not. */
+  --text-mega: clamp(2.55rem, 1.45rem + 4.6vw, 5.15rem);
+  --text-mega--line-height: 0.95;
+  --text-mega--letter-spacing: -0.035em;
+
+  --text-title: clamp(1.85rem, 1.4rem + 1.9vw, 2.85rem);
+  --text-title--line-height: 1.05;
+  --text-title--letter-spacing: -0.025em;
+
+  --text-head: clamp(1.3rem, 1.15rem + 0.6vw, 1.6rem);
+  --text-head--line-height: 1.2;
+  --text-head--letter-spacing: -0.015em;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.1;
+  --text-label--letter-spacing: 0.14em;
+}
+
+@layer base {
+  * {
+    border-color: var(--rule);
+  }
+
+  html {
+    scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-feature-settings: 'kern' 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  /* Numerals line up in tables and stat rows. */
+  table, .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  ::selection {
+    background: var(--signal);
+    color: var(--paper);
+  }
+
+  img, svg, video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@layer components {
+  /*
+   * The annotation rail - the site's one structural signature.
+   * Content sits in the main column; the rail beside it carries the marginalia
+   * an engineer would pencil into a spec: dates, counts, caveats, versions.
+   * Below 1024px the rail is not hidden, it folds above its own content so the
+   * annotations keep their meaning on a phone.
+   */
+  .rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    .rail {
+      grid-template-columns: 12rem minmax(0, 1fr);
+      column-gap: 3.5rem;
+      align-items: start;
+    }
+
+    .rail > .rail-aside {
+      position: sticky;
+      top: 6.5rem;
+      border-right: 1px solid var(--rule);
+      padding-right: 1.25rem;
+      min-height: 3rem;
+    }
+
+    /* A measurement tick straddling the margin rule, one per section, so the
+       rail reads as a ruler down the page rather than a stray border. */
+    .rail > .rail-aside::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 0.3rem;
+      width: 9px;
+      height: 2px;
+      background: var(--ink);
+    }
+  }
+
+  .tick {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    line-height: 1.1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .measure {
+    max-width: 38rem;
+  }
+
+  .link-quiet {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: text-decoration-color 160ms ease, color 160ms ease;
+  }
+
+  .link-quiet:hover {
+    color: var(--signal);
+    text-decoration-color: var(--signal);
+  }
+
+  /* Page-load sequence: one orchestrated moment, only on first paint. */
+  .lift {
+    animation: lift 620ms cubic-bezier(0.16, 0.84, 0.34, 1) backwards;
+  }
+
+  @keyframes lift {
+    from {
+      opacity: 0;
+      transform: translateY(0.6rem);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

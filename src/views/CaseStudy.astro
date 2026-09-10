@@ -1,0 +1,164 @@
+---
+import { Image } from 'astro:assets';
+import Base from '~/layouts/Base.astro';
+import Section from '~/components/Section.astro';
+import StatusTag from '~/components/StatusTag.astro';
+import DecisionCard from '~/components/DecisionCard.astro';
+import Contact from '~/components/Contact.astro';
+import { projects, type Project } from '~/content/projects';
+import { localizePath, t, type Locale } from '~/lib/i18n';
+
+interface Props {
+  locale: Locale;
+  project: Project;
+}
+
+const { locale, project } = Astro.props;
+
+const index = projects.findIndex((p) => p.slug === project.slug);
+const next = projects[(index + 1) % projects.length]!;
+
+/**
+ * Screenshots of one project are cropped to a shared aspect ratio taken from the
+ * first shot, so a row of them reads as one set instead of a ragged collage.
+ */
+const shots = project.shots ?? [];
+const first = shots[0];
+const ratio = first ? `${first.src.width} / ${first.src.height}` : '16 / 9';
+
+/** A game with no build and a SaaS with no signup are unavailable for different reasons. */
+const noLink = project.status === 'prototype' ? t.caseNoLinkBuild[locale] : t.caseNoLinkAccount[locale];
+
+const title = `${project.name} - ${project.kind[locale]} · sp1le`;
+const description = project.summary[locale];
+---
+
+<Base locale={locale} title={title} description={description} path={`/work/${project.slug}`}>
+  <div class="mx-auto max-w-[78rem] px-5 sm:px-8">
+    <div class="pt-10 sm:pt-14">
+      <a href={localizePath('/work', locale)} class="tick text-soft transition-colors hover:text-ink">
+        ← {t.backToWork[locale]}
+      </a>
+    </div>
+
+    <header class="border-b border-rule py-8 sm:py-12">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <StatusTag status={project.status} locale={locale} />
+        <span class="tick text-faint">{project.period}</span>
+        <span class="tick text-faint">{project.kind[locale]}</span>
+      </div>
+
+      <h1 class="lift mt-5 text-mega font-display font-semibold text-ink">{project.name}</h1>
+
+      <p class="lift measure mt-6 text-base leading-relaxed text-soft sm:text-lg" style="animation-delay: 70ms">
+        {project.intro[locale]}
+      </p>
+
+      <div class="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+        <span class="font-mono text-xs text-faint">{project.runtime}</span>
+        {
+          project.href ? (
+            <a
+              href={project.href}
+              rel="noopener"
+              class="inline-flex h-9 items-center rounded-sm border border-signal px-4 font-mono text-xs font-semibold text-signal transition-colors hover:bg-signal-quiet"
+            >
+              {t.caseVisit[locale]} · {project.hrefLabel}
+            </a>
+          ) : (
+            <span class="font-mono text-xs text-faint">{noLink}</span>
+          )
+        }
+      </div>
+    </header>
+
+    {
+      shots.length > 0 && (
+        <div class:list={['mt-10 grid gap-4', shots.length > 2 ? 'sm:grid-cols-3' : 'sm:grid-cols-2']}>
+          {shots.map((shot, i) => (
+            <figure class="overflow-hidden rounded-sm border border-rule bg-raise">
+              <Image
+                src={shot.src}
+                alt={shot.alt[locale]}
+                widths={[420, 840, 1200]}
+                sizes={shots.length > 2 ? '(min-width: 640px) 33vw, 100vw' : '(min-width: 640px) 50vw, 100vw'}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+                class="w-full object-cover object-top"
+                style={`aspect-ratio: ${ratio}`}
+              />
+            </figure>
+          ))}
+        </div>
+      )
+    }
+
+    <div class="mt-20 space-y-20 sm:mt-28 sm:space-y-28">
+      <Section label={t.railConstraint[locale]}>
+        <p class="measure text-lg leading-relaxed text-balance text-ink">
+          {project.constraint[locale]}
+        </p>
+      </Section>
+
+      <Section
+        label={t.railDecisions[locale]}
+        notes={[
+          locale === 'uk'
+            ? `${project.decisions.length} записи`
+            : `${project.decisions.length} records`,
+          locale === 'uk' ? 'кожен - із ціною' : 'each with its bill',
+        ]}
+      >
+        <h2 class="text-title font-display font-semibold text-ink">{t.caseDecisions[locale]}</h2>
+        <div class="mt-10 space-y-10">
+          {project.decisions.map((decision) => <DecisionCard decision={decision} locale={locale} />)}
+        </div>
+      </Section>
+
+      <Section label={t.railNumbers[locale]} notes={[locale === 'uk' ? 'заміряно, не округлено' : 'measured, not rounded']}>
+        <h2 class="text-title font-display font-semibold text-ink">{t.caseNumbers[locale]}</h2>
+        <dl class="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
+          {
+            project.metrics.map((metric) => (
+              <div class="border-t border-rule pt-4">
+                <dt class="tnum font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+                  {metric.value}
+                </dt>
+                <dd class="mt-1.5 text-sm leading-snug text-faint">{metric.label[locale]}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </Section>
+
+      <Section label={t.railStack[locale]}>
+        <ul class="flex flex-wrap gap-2">
+          {
+            project.stack.map((item) => (
+              <li class="rounded-sm border border-rule bg-raise px-2.5 py-1 font-mono text-xs text-soft">{item}</li>
+            ))
+          }
+        </ul>
+      </Section>
+
+      <Section
+        label={t.railRetro[locale]}
+        notes={[locale === 'uk' ? 'написано після, не до' : 'written after, not before']}
+      >
+        <h2 class="text-title font-display font-semibold text-ink">{t.caseRetro[locale]}</h2>
+        <p class="measure mt-6 leading-relaxed text-soft">{project.retro[locale]}</p>
+      </Section>
+
+      <Section label={t.caseNext[locale]}>
+        <a href={localizePath(`/work/${next.slug}`, locale)} class="group block border-t border-rule pt-5">
+          <span class="block font-display text-title font-semibold text-ink transition-colors group-hover:text-signal">
+            {next.name}
+          </span>
+          <span class="measure mt-3 block text-sm leading-relaxed text-soft">{next.summary[locale]}</span>
+        </a>
+      </Section>
+
+      <Contact locale={locale} />
+    </div>
+  </div>
+</Base>
