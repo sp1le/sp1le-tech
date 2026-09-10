@@ -64,23 +64,24 @@ const personLd = {
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#f2f3f6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1b1d24" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#1a1c24" />
 
     <link rel="preload" href="/fonts/plex-sans-latin-3.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/geologica-latin-3.woff2" as="font" type="font/woff2" crossorigin />
 
     <script is:inline set:html={JSON.stringify(personLd)} type="application/ld+json" />
 
-    {/* Applies the stored theme before first paint so the page never flashes the wrong scheme. */}
+    {/* Dark is the default; a stored light choice is applied before first paint so nothing flashes. */}
     <script is:inline>
       (function () {
-        var root = document.documentElement;
         try {
-          var saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+          if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            var m = document.querySelector('meta[name="theme-color"]');
+            if (m) m.content = '#f2f3f6';
+          }
         } catch (e) {
-          /* private mode or blocked storage: fall back to the OS preference */
+          /* private mode or blocked storage: stay on the default */
         }
       })();
     </script>
@@ -102,5 +103,19 @@ const personLd = {
 
     <Footer locale={locale} />
 
+    <script>
+      // The rail tick of the section under the reader's eye lights up. A narrow
+      // band around 40% of the viewport decides which section that is.
+      const rails = document.querySelectorAll<HTMLElement>('.rail');
+      if (rails.length > 0 && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) entry.target.classList.toggle('is-active', entry.isIntersecting);
+          },
+          { rootMargin: '-38% 0px -52% 0px', threshold: 0 },
+        );
+        rails.forEach((rail) => observer.observe(rail));
+      }
+    </script>
   </body>
 </html>

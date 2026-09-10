@@ -4,6 +4,7 @@ import Section from '~/components/Section.astro';
 import Manifest from '~/components/Manifest.astro';
 import DecisionCard from '~/components/DecisionCard.astro';
 import Contact from '~/components/Contact.astro';
+import Pipeline from '~/components/Pipeline.astro';
 import { highlightedDecisions, projectBySlug, projects } from '~/content/projects';
 import { services, stack } from '~/content/site';
 import { localizePath, t, type Locale } from '~/lib/i18n';
@@ -46,12 +47,14 @@ const description =
 
 <Base locale={locale} title={title} description={description} path="/">
   <div class="mx-auto max-w-[78rem] px-5 sm:px-8">
-    {/* Hero: the thesis, then immediately the evidence. */}
-    <section class="pt-16 pb-10 sm:pt-24 sm:pb-14">
+    {/* Hero: the thesis, the thesis drawn as a system, then the evidence. */}
+    <section class="relative pt-16 pb-10 sm:pt-24 sm:pb-14">
+      <div class="glow" aria-hidden="true"></div>
+
       <p class="tick lift text-soft">{t.heroEyebrow[locale]}</p>
 
       <h1
-        class="lift mt-6 max-w-[19ch] text-mega font-display font-semibold text-ink"
+        class="settle mt-6 max-w-[17ch] text-mega font-display font-semibold text-ink"
         style="animation-delay: 60ms"
       >
         {t.heroTitle[locale]}
@@ -75,6 +78,8 @@ const description =
           {t.navServices[locale]}
         </a>
       </div>
+
+      <Pipeline locale={locale} class="mt-14 sm:mt-16" />
     </section>
 
     <div class="space-y-20 pb-4 sm:space-y-28">

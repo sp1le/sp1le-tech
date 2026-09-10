@@ -4,15 +4,41 @@
 /*
  * Palette rationale
  * -----------------
- * Cool chalk paper + blue-cast ink: a spec sheet, not a warm editorial page.
- * Exactly two hues carry meaning, and each has one job:
+ * Graphite by default, chalk paper on request. Blue-cast ink either way: a spec
+ * sheet, not a warm editorial page. Exactly two hues carry meaning:
  *   signal (ultramarine) - links, active state, anything currently running
- *   flag   (amber)       - work that is still in development
- * A third state, "shipped and handed over", is deliberately colourless.
- * That way the palette itself reports project status instead of decorating it.
+ *   flag   (amber)       - work that is still unfinished, and the cost of a decision
+ * A third state, "handed over", is deliberately colourless. The palette reports
+ * status instead of decorating it.
+ *
+ * Dark is the default regardless of OS preference. That is a brand decision,
+ * not an oversight: the toggle persists a light choice in localStorage.
  */
 
 :root {
+  color-scheme: dark;
+
+  --paper: oklch(16.5% 0.012 266);
+  --paper-raise: oklch(20.5% 0.014 266);
+  --paper-sunk: oklch(13.5% 0.011 266);
+
+  --ink: oklch(94% 0.007 260);
+  --ink-soft: oklch(70% 0.014 262);
+  --ink-faint: oklch(56% 0.014 264);
+
+  --rule: oklch(29% 0.015 264);
+  --rule-soft: oklch(24% 0.013 264);
+
+  --signal: oklch(74% 0.14 258);
+  --signal-quiet: oklch(74% 0.14 258 / 0.14);
+  --signal-glow: oklch(74% 0.14 258 / 0.22);
+  --flag: oklch(78% 0.125 68);
+  --flag-quiet: oklch(78% 0.125 68 / 0.14);
+
+  --grain-opacity: 0.05;
+}
+
+:root[data-theme='light'] {
   color-scheme: light;
 
   --paper: oklch(96.4% 0.005 258);
@@ -28,56 +54,11 @@
 
   --signal: oklch(47% 0.185 264);
   --signal-quiet: oklch(47% 0.185 264 / 0.09);
+  --signal-glow: oklch(47% 0.185 264 / 0.12);
   --flag: oklch(54% 0.135 62);
   --flag-quiet: oklch(54% 0.135 62 / 0.11);
 
-  --shadow-raise: 0 1px 2px oklch(22% 0.022 266 / 0.05), 0 8px 24px -16px oklch(22% 0.022 266 / 0.28);
-}
-
-:root[data-theme='dark'] {
-  color-scheme: dark;
-
-  --paper: oklch(17.5% 0.014 266);
-  --paper-raise: oklch(21.5% 0.016 266);
-  --paper-sunk: oklch(14.5% 0.012 266);
-
-  --ink: oklch(93.5% 0.007 260);
-  --ink-soft: oklch(68% 0.014 262);
-  --ink-faint: oklch(55% 0.014 264);
-
-  --rule: oklch(30.5% 0.016 264);
-  --rule-soft: oklch(25% 0.014 264);
-
-  --signal: oklch(74% 0.135 258);
-  --signal-quiet: oklch(74% 0.135 258 / 0.14);
-  --flag: oklch(78% 0.125 68);
-  --flag-quiet: oklch(78% 0.125 68 / 0.14);
-
-  --shadow-raise: 0 1px 2px oklch(0% 0 0 / 0.4), 0 8px 24px -16px oklch(0% 0 0 / 0.6);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-
-    --paper: oklch(17.5% 0.014 266);
-    --paper-raise: oklch(21.5% 0.016 266);
-    --paper-sunk: oklch(14.5% 0.012 266);
-
-    --ink: oklch(93.5% 0.007 260);
-    --ink-soft: oklch(68% 0.014 262);
-    --ink-faint: oklch(55% 0.014 264);
-
-    --rule: oklch(30.5% 0.016 264);
-    --rule-soft: oklch(25% 0.014 264);
-
-    --signal: oklch(74% 0.135 258);
-    --signal-quiet: oklch(74% 0.135 258 / 0.14);
-    --flag: oklch(78% 0.125 68);
-    --flag-quiet: oklch(78% 0.125 68 / 0.14);
-
-    --shadow-raise: 0 1px 2px oklch(0% 0 0 / 0.4), 0 8px 24px -16px oklch(0% 0 0 / 0.6);
-  }
+  --grain-opacity: 0.07;
 }
 
 @theme inline {
@@ -98,11 +79,9 @@
   --color-flag: var(--flag);
   --color-flag-quiet: var(--flag-quiet);
 
-  --shadow-raise: var(--shadow-raise);
-
   /* Type scale - display sizes are fluid, text sizes are not. */
-  --text-mega: clamp(2.55rem, 1.45rem + 4.6vw, 5.15rem);
-  --text-mega--line-height: 0.95;
+  --text-mega: clamp(2.6rem, 1.2rem + 5.4vw, 6rem);
+  --text-mega--line-height: 0.94;
   --text-mega--letter-spacing: -0.035em;
 
   --text-title: clamp(1.85rem, 1.4rem + 1.9vw, 2.85rem);
@@ -139,6 +118,18 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Paper grain: a fixed film of monochrome noise. Cheap, and it stops large
+     flat areas from looking like a screenshot of a spreadsheet. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
   h1, h2, h3 {
     font-family: var(--font-display);
     font-weight: 600;
@@ -170,7 +161,7 @@
 
 @layer components {
   /*
-   * The annotation rail - the site's one structural signature.
+   * The annotation rail - the site's structural signature.
    * Content sits in the main column; the rail beside it carries the marginalia
    * an engineer would pencil into a spec: dates, counts, caveats, versions.
    * Below 1024px the rail is not hidden, it folds above its own content so the
@@ -180,6 +171,14 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
+  }
+
+  .rail > .rail-aside > .tick:first-child {
+    transition: color 320ms ease;
+  }
+
+  .rail.is-active > .rail-aside > .tick:first-child {
+    color: var(--signal);
   }
 
   @media (min-width: 1024px) {
@@ -198,7 +197,8 @@
     }
 
     /* A measurement tick straddling the margin rule, one per section, so the
-       rail reads as a ruler down the page rather than a stray border. */
+       rail reads as a ruler down the page. The tick of the section you are
+       reading lights up, which turns the ruler into a position indicator. */
     .rail > .rail-aside::after {
       content: '';
       position: absolute;
@@ -207,6 +207,12 @@
       width: 9px;
       height: 2px;
       background: var(--ink);
+      transition: background-color 320ms ease, width 320ms ease;
+    }
+
+    .rail.is-active > .rail-aside::after {
+      width: 15px;
+      background: var(--signal);
     }
   }
 
@@ -237,6 +243,15 @@
     text-decoration-color: var(--signal);
   }
 
+  /* Ambient light behind the hero, and nowhere else. */
+  .glow {
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 90%;
+    pointer-events: none;
+    background: radial-gradient(ellipse 48% 55% at 82% 22%, var(--signal-glow), transparent 70%);
+  }
+
   /* Page-load sequence: one orchestrated moment, only on first paint. */
   .lift {
     animation: lift 620ms cubic-bezier(0.16, 0.84, 0.34, 1) backwards;
@@ -248,6 +263,131 @@
       transform: translateY(0.6rem);
     }
   }
+
+  /* The headline settles from a light weight into its final one, like ink
+     drying. Geologica is a variable font, so the weight itself animates. */
+  .settle {
+    animation: settle 980ms cubic-bezier(0.16, 0.84, 0.34, 1) backwards;
+  }
+
+  @keyframes settle {
+    from {
+      opacity: 0;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      transform: translateY(0.35rem);
+    }
+    to {
+      opacity: 1;
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      transform: none;
+    }
+  }
+
+  /*
+   * The pipeline: the headline drawn as a system. Five nodes and four edges,
+   * a request packet hopping node to node, each node lighting as it arrives.
+   * A column on phones, a row from 640px up. Pure CSS; no JS is involved.
+   */
+  .pipe {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .pipe-node {
+    --delay: 0s;
+    position: relative;
+    min-width: 0;
+    border: 1px solid var(--rule);
+    background: var(--paper-raise);
+    border-radius: 2px;
+    padding: 0.8rem 1rem;
+    animation: node-pulse 3s var(--delay) infinite;
+  }
+
+  .pipe-edge {
+    --delay: 0s;
+    position: relative;
+    flex: 0 0 2.25rem;
+  }
+
+  .pipe-edge::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+
+  .pipe-packet {
+    position: absolute;
+    left: calc(50% - 3px);
+    top: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 10px 1px var(--signal-glow);
+    opacity: 0;
+    animation: travel-y 3s var(--delay) infinite;
+  }
+
+  @media (min-width: 640px) {
+    .pipe {
+      flex-direction: row;
+      align-items: stretch;
+    }
+
+    .pipe-node {
+      flex: 1 1 0;
+    }
+
+    .pipe-edge {
+      flex: 0 1 4.5rem;
+      min-width: 1.5rem;
+    }
+
+    .pipe-edge::before {
+      left: 0;
+      right: 0;
+      top: 50%;
+      bottom: auto;
+      width: auto;
+      height: 1px;
+    }
+
+    .pipe-packet {
+      left: 0;
+      top: calc(50% - 3px);
+      animation-name: travel-x;
+    }
+  }
+
+  @keyframes travel-x {
+    0%   { left: 0; opacity: 1; }
+    19%  { left: calc(100% - 6px); opacity: 1; }
+    20%  { opacity: 0; }
+    100% { left: calc(100% - 6px); opacity: 0; }
+  }
+
+  @keyframes travel-y {
+    0%   { top: 0; opacity: 1; }
+    19%  { top: calc(100% - 6px); opacity: 1; }
+    20%  { opacity: 0; }
+    100% { top: calc(100% - 6px); opacity: 0; }
+  }
+
+  @keyframes node-pulse {
+    0%, 100% { border-color: var(--rule); box-shadow: none; }
+    2%       { border-color: var(--signal); box-shadow: 0 0 0 1px var(--signal-quiet), 0 0 28px -6px var(--signal); }
+    24%      { border-color: var(--rule); box-shadow: none; }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -258,5 +398,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .pipe-packet {
+    display: none;
   }
 }

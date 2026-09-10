@@ -15,54 +15,41 @@ const { locale } = Astro.props;
   aria-label={t.toggleTheme[locale]}
   title={t.toggleTheme[locale]}
 >
-  {/* Two glyphs, one visible at a time - swapped by CSS so there is no icon flash on load. */}
-  <svg class="size-4 dark-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+  {/* Dark is the default, so the sun (switch to light) shows first. Swapped by CSS: no icon flash on load. */}
+  <svg class="size-4 icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
     <circle cx="12" cy="12" r="4"></circle>
     <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
   </svg>
-  <svg class="size-4 dark-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+  <svg class="size-4 icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
     <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"></path>
   </svg>
 </button>
 
 <style>
-  .dark-show {
+  .icon-moon {
     display: none;
   }
 
-  :global(:root[data-theme='dark']) .dark-show {
+  :global(:root[data-theme='light']) .icon-moon {
     display: block;
   }
 
-  :global(:root[data-theme='dark']) .dark-hide {
+  :global(:root[data-theme='light']) .icon-sun {
     display: none;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .dark-show {
-      display: block;
-    }
-
-    :global(:root:not([data-theme='light'])) .dark-hide {
-      display: none;
-    }
   }
 </style>
 
 <script>
   const root = document.documentElement;
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
 
-  const currentTheme = (): 'light' | 'dark' => {
-    const explicit = root.getAttribute('data-theme');
-    if (explicit === 'light' || explicit === 'dark') return explicit;
-    return prefersDark.matches ? 'dark' : 'light';
-  };
+  const current = (): 'light' | 'dark' => (root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
 
   for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
     button.addEventListener('click', () => {
-      const next = currentTheme() === 'dark' ? 'light' : 'dark';
+      const next = current() === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', next);
+      if (themeColor) themeColor.content = next === 'light' ? '#f2f3f6' : '#1a1c24';
       try {
         localStorage.setItem('theme', next);
       } catch {

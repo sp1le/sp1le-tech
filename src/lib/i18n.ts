@@ -44,6 +44,22 @@ export const t = {
   railProof: { en: 'Proof', uk: 'Доказ' },
   proofTitle: { en: 'Open it yourself', uk: 'Відкрийте самі' },
 
+  // Live probe next to a "Running" label
+  pingFail: { en: 'unreachable', uk: 'недоступно' },
+  pingTitle: { en: 'Measured from your browser just now', uk: 'Виміряно з вашого браузера щойно' },
+
+  // The pipeline figure under the hero
+  pipelineCaption: {
+    en: 'Every box on this line is mine to build and mine to keep up.',
+    uk: 'Кожен блок на цій лінії - мій: і збудувати, і тримати живим.',
+  },
+  pipelineAria: {
+    en: 'Diagram: schema, service, systemd unit, nginx edge, user. One engineer owns every stage.',
+    uk: 'Схема: база даних, сервіс, systemd-юніт, nginx, користувач. Кожен етап тримає один інженер.',
+  },
+
+  notFoundStatus: { en: 'Active: failed (Result: not-found)', uk: 'Active: failed (Result: not-found)' },
+
   // Navigation and chrome
   navWork: { en: 'Work', uk: 'Роботи' },
   navServices: { en: 'Hire me', uk: 'Співпраця' },

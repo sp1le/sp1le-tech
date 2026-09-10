@@ -144,8 +144,8 @@ export const projects: Project[] = [
     ],
     stack: ['Python', 'FastAPI', 'PostgreSQL', 'Alembic', 'Telethon', 'aiogram', 'Vertex AI', 'S3 / Azure Blob', 'Sentry', 'systemd', 'nginx', 'Docker'],
     retro: {
-      en: 'The first version reached production before its tenancy rules had tests, and I then spent a nervous week proving to myself that nothing had leaked. That is the wrong order and I knew it at the time. On Sonar the guard module and its tests existed before the second tenant did. I would also have started on Postgres rather than migrating SQLite to it underneath a running service - the naive-versus-aware datetime mismatch alone ate more time than the migration saved.',
-      uk: 'Перша версія доїхала до продакшену раніше, ніж правила тенантності отримали тести, і далі я провів нервовий тиждень, доводячи собі, що нічого не витекло. Це неправильний порядок, і я це розумів уже тоді. У Sonar модуль-вартовий і його тести з’явилися раніше за другого клієнта. І я б одразу починав на Postgres, а не мігрував SQLite під працюючим сервісом - сама лише розбіжність naive/aware дат з’їла більше часу, ніж міграція зекономила.',
+      en: 'The first version ran on SQLite and was moved to Postgres underneath a live service. It worked, and the naive-versus-aware datetime mismatch it surfaced still cost more than the migration saved - I would start on Postgres now, not migrate to it. The part I would keep exactly as it is: the tenancy guard having its own test module, because isolation that lives in application code has to be proven, not assumed.',
+      uk: 'Перша версія працювала на SQLite і переїхала на Postgres під живим сервісом. Це спрацювало, але розбіжність naive/aware дат, яку витягнув переїзд, усе одно коштувала більше, ніж міграція зекономила - зараз я починав би одразу на Postgres. Що лишив би точно як є: окремий тестовий модуль для вартового тенантності, бо ізоляцію, яка живе в коді застосунку, треба доводити, а не припускати.',
     },
     shots: [
       {
@@ -248,8 +248,8 @@ export const projects: Project[] = [
     ],
     stack: ['FastAPI', 'aiogram 3', 'React', 'Vite', 'SQLAlchemy', 'SQLite FTS5', 'Nova Poshta API', 'Monobank Acquiring', 'systemd', 'nginx'],
     retro: {
-      en: 'The order model absorbed Telegram assumptions in the first weeks - a user id was simply always there - and unpicking that when the public site arrived was the most tedious part of the project. Optional identity from the first commit would have cost nothing then and saved a fortnight later. I also shipped the admin FSM before asking the staff how they actually take an order during a rush, and the first flow had to be rewritten after watching one shift.',
-      uk: 'Модель замовлення в перші тижні ввібрала припущення Telegram - id користувача просто завжди був - і розплітати це, коли зʼявився публічний сайт, було найнуднішою частиною проєкту. Необовʼязкова ідентичність з першого коміту тоді не коштувала б нічого й зекономила б два тижні потім. Ще я випустив адмінський FSM раніше, ніж спитав персонал, як вони реально приймають замовлення в час пік, і перший сценарій довелося переписати після однієї зміни спостережень.',
+      en: 'The public site came after the Mini App, and the schema still shows the order in which things happened: orders.telegram_id is nullable and every order carries a source of telegram or web, but users and carts are keyed by a Telegram id. A web buyer can place an order and cannot have a cart or a history. That is a real seam, not a cosmetic one. Starting again, the account model would be identity-agnostic from the first migration instead of Telegram-first with a web exception bolted on.',
+      uk: 'Публічний сайт зʼявився після Mini App, і схема досі показує, в якому порядку все відбувалося: orders.telegram_id допускає NULL і кожне замовлення має source зі значенням telegram або web, але користувачі й кошики привʼязані до Telegram-id. Покупець із сайту може замовити, але не може мати кошика чи історії. Це справжній шов, а не косметичний. Починаючи знову, модель акаунта була б незалежною від ідентичності з першої міграції, а не Telegram-first із прикрученим винятком для вебу.',
     },
     href: 'https://tandir.top',
     hrefLabel: 'tandir.top',
@@ -475,8 +475,8 @@ export const projects: Project[] = [
     ],
     stack: ['Node.js', 'ws', 'node:sqlite', 'node:test', 'Web Speech API', 'Vertex AI', 'nginx'],
     retro: {
-      en: 'The judge began as a string comparison and only became a shared parser after I watched two players get opposite verdicts for the same spoken answer. Anything both sides evaluate should have been one file from the first commit; I had to be embarrassed into it. The game also lives under a path rather than a subdomain, which means no absolute path may ever appear inside it - a constraint I now have to remember forever instead of having configured once.',
-      uk: 'Суддя починався як порівняння рядків і став спільним парсером лише після того, як я побачив, що двоє гравців отримали протилежні вердикти за одну й ту саму сказану відповідь. Усе, що оцінюють обидві сторони, мало бути одним файлом із першого коміту; мене довелося присоромити. А ще гра живе на підшляху, а не на піддомені, тож усередині не може зʼявитися жодного абсолютного шляху - обмеження, яке тепер треба памʼятати вічно, замість того щоб один раз налаштувати.',
+      en: 'The answer parser lives in shared/ because the alternative - two parsers agreeing by luck - is the kind of bug that only shows up in front of players, when it is too late to be quiet about it. The game also lives under a path rather than a subdomain, which means no absolute path may ever appear inside it: a constraint I now carry in my head forever instead of having configured once.',
+      uk: 'Парсер відповіді лежить у shared/, бо альтернатива - два парсери, що збігаються випадково, - це той баг, який виявляється тільки перед гравцями, коли мовчати вже пізно. А ще гра живе на підшляху, а не на піддомені, тож усередині не може зʼявитися жодного абсолютного шляху - обмеження, яке тепер треба памʼятати вічно, замість того щоб один раз налаштувати.',
     },
     href: 'https://sp1le.tech/voiceduel',
     hrefLabel: 'sp1le.tech/voiceduel',

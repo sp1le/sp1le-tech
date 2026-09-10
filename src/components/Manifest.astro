@@ -12,16 +12,15 @@ const { locale } = Astro.props;
 /** Ordered by state rather than by how proud I am of each one. */
 const rank: Record<Status, number> = { live: 0, building: 1, prototype: 2, handedOver: 3 };
 const rows = [...projects].sort((a, b) => rank[a.status] - rank[b.status]);
+
+const cols = 'lg:grid-cols-[minmax(0,11rem)_minmax(0,1fr)_minmax(0,14rem)_minmax(0,11rem)]';
 ---
 
 <div class="border-t border-rule">
   <p class="sr-only" id="manifest-caption">{t.manifestNote[locale]}</p>
 
   {/* Column heads earn their keep only when there is room for four columns. */}
-  <div
-    class="hidden border-b border-rule py-2 lg:grid lg:grid-cols-[minmax(0,10rem)_minmax(0,1fr)_minmax(0,15rem)_minmax(0,8rem)] lg:gap-6"
-    aria-hidden="true"
-  >
+  <div class:list={['hidden border-b border-rule py-2 lg:grid lg:gap-6', cols]} aria-hidden="true">
     <span class="tick">{t.colProject[locale]}</span>
     <span class="tick">{t.colWhat[locale]}</span>
     <span class="tick">{t.colRuntime[locale]}</span>
@@ -30,27 +29,66 @@ const rows = [...projects].sort((a, b) => rank[a.status] - rank[b.status]);
 
   <ul class="divide-y divide-rule" aria-describedby="manifest-caption">
     {
-      rows.map((project, i) => (
-        <li class="lift" style={`animation-delay: ${140 + i * 70}ms`}>
-          <a
-            href={localizePath(`/work/${project.slug}`, locale)}
-            class="group grid grid-cols-1 gap-x-6 gap-y-2 py-5 transition-colors hover:bg-sunk/60 focus-visible:bg-sunk/60 lg:grid-cols-[minmax(0,11rem)_minmax(0,1fr)_minmax(0,14rem)_minmax(0,8rem)] lg:items-baseline"
-          >
-            <span class="flex items-baseline justify-between gap-3 lg:block">
-              <span class="font-display text-lg font-semibold tracking-tight text-ink transition-colors group-hover:text-signal sm:text-xl">
-                {project.name}
+      rows.map((project, i) => {
+        // Only work that claims to be running gets probed. Claims are cheap; a round-trip is not.
+        const ping = project.status === 'live' ? project.href : undefined;
+        return (
+          <li class="lift" style={`animation-delay: ${320 + i * 70}ms`}>
+            <a
+              href={localizePath(`/work/${project.slug}`, locale)}
+              class:list={[
+                'group grid grid-cols-1 gap-x-6 gap-y-2 py-5 transition-colors hover:bg-sunk/60 focus-visible:bg-sunk/60 lg:items-baseline',
+                cols,
+              ]}
+            >
+              <span class="flex items-baseline justify-between gap-3 lg:block">
+                <span class="font-display text-lg font-semibold tracking-tight text-ink transition-colors group-hover:text-signal sm:text-xl">
+                  {project.name}
+                </span>
+                <StatusTag status={project.status} locale={locale} ping={ping} class="lg:hidden" />
               </span>
-              <StatusTag status={project.status} locale={locale} class="lg:hidden" />
-            </span>
 
-            <span class="text-sm leading-snug text-soft">{project.summary[locale]}</span>
+              <span class="text-sm leading-snug text-soft">{project.summary[locale]}</span>
 
-            <span class="font-mono text-xs text-faint">{project.runtime}</span>
+              <span class="font-mono text-xs text-faint">{project.runtime}</span>
 
-            <StatusTag status={project.status} locale={locale} class="hidden lg:inline-flex" />
-          </a>
-        </li>
-      ))
+              <StatusTag status={project.status} locale={locale} ping={ping} class="hidden lg:inline-flex" />
+            </a>
+          </li>
+        );
+      })
     }
   </ul>
 </div>
+
+<script>
+  // "Running" is measured, not asserted: each live URL is fetched once from the
+  // visitor's browser and the round-trip is written next to the label. no-cors
+  // keeps the response opaque, which is fine - the question is whether the
+  // server answered, not what it said.
+  const targets = new Map<string, HTMLElement[]>();
+  for (const el of document.querySelectorAll<HTMLElement>('[data-ping]')) {
+    const url = el.dataset['ping'];
+    if (!url) continue;
+    targets.set(url, [...(targets.get(url) ?? []), el]);
+  }
+
+  for (const [url, els] of targets) {
+    const started = performance.now();
+    const control = new AbortController();
+    const timer = window.setTimeout(() => control.abort(), 6000);
+
+    fetch(url, { mode: 'no-cors', cache: 'no-store', signal: control.signal })
+      .then(() => {
+        const ms = Math.round(performance.now() - started);
+        for (const el of els) el.textContent = `· ${ms} ms`;
+      })
+      .catch(() => {
+        for (const el of els) {
+          el.textContent = `· ${el.dataset['fail'] ?? ''}`;
+          el.classList.add('text-flag');
+        }
+      })
+      .finally(() => window.clearTimeout(timer));
+  }
+</script>

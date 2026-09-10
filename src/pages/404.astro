@@ -10,7 +10,9 @@ const locale = 'en' as const;
 <Base locale={locale} title="404 · sp1le" description={t.notFoundLede[locale]} path="/404">
   <div class="mx-auto max-w-[78rem] px-5 sm:px-8">
     <section class="flex min-h-[60vh] flex-col justify-center py-20">
-      <p class="tick text-flag">404</p>
+      <pre class="font-mono text-xs leading-relaxed text-faint"><span class="text-flag">●</span> sp1le.tech - <span class="text-ink">requested page</span>
+   Loaded: <span class="text-ink">not-found</span>
+   {t.notFoundStatus[locale]}</pre>
       <h1 class="mt-6 max-w-[14ch] text-mega font-display font-semibold text-ink">
         {t.notFoundTitle[locale]}
       </h1>

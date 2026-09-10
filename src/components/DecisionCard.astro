@@ -16,9 +16,10 @@ const { decision, locale, source } = Astro.props;
  * without a stated cost is a preference wearing a lab coat.
  */
 const fields = [
-  { label: t.labelInstead[locale], value: decision.instead[locale], tone: 'text-faint line-through decoration-rule' },
-  { label: t.labelBecause[locale], value: decision.because[locale], tone: 'text-soft' },
-  { label: t.labelCost[locale], value: decision.cost[locale], tone: 'text-soft' },
+  { label: t.labelInstead[locale], value: decision.instead[locale], tone: 'text-faint line-through decoration-rule', labelTone: '' },
+  { label: t.labelBecause[locale], value: decision.because[locale], tone: 'text-soft', labelTone: '' },
+  // Amber is the colour of unfinished things and of what a choice costs: the same honesty.
+  { label: t.labelCost[locale], value: decision.cost[locale], tone: 'text-ink', labelTone: 'text-flag' },
 ];
 ---
 
@@ -39,7 +40,7 @@ const fields = [
     {
       fields.map((field) => (
         <div class="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-[7.5rem_minmax(0,1fr)]">
-          <dt class="tick pt-1">{field.label}</dt>
+          <dt class:list={['tick pt-1', field.labelTone]}>{field.label}</dt>
           <dd class:list={['text-sm leading-relaxed', field.tone]}>{field.value}</dd>
         </div>
       ))

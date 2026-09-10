@@ -5,10 +5,12 @@ import { t, type Locale } from '~/lib/i18n';
 interface Props {
   status: Status;
   locale: Locale;
+  /** A URL to probe from the visitor's browser; the round-trip lands next to the label. */
+  ping?: string | undefined;
   class?: string;
 }
 
-const { status, locale, class: className = '' } = Astro.props;
+const { status, locale, ping, class: className = '' } = Astro.props;
 
 /**
  * Colour is the status. Live work is the one thing on the page allowed to use
@@ -31,4 +33,9 @@ const s = styles[status];
     <span class:list={['relative inline-flex size-1.5 rounded-full', s.dot]}></span>
   </span>
   {s.label}
+  {
+    ping && (
+      <span class="tnum text-faint" data-ping={ping} data-fail={t.pingFail[locale]} title={t.pingTitle[locale]}></span>
+    )
+  }
 </span>
