@@ -46,7 +46,7 @@ location / {
     # Multi-page static site: fall through to the real 404 page rather than
     # the SPA-style rewrite to /index.html, which answers 200 for every
     # mistyped URL and lets search engines index them.
-    try_files $uri $uri/ $uri.html =404;
+    try_files $uri $uri/index.html $uri.html =404;
     error_page 404 /404.html;
 }
 ```

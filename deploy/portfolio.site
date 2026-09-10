@@ -1,0 +1,62 @@
+server {
+    server_name sp1le.tech www.sp1le.tech;
+
+    root /var/www/portfolio;
+    index index.html;
+
+    # Static multi-page site: the file, the directory index, or a real 404.
+    # The old SPA-style fallback to /index.html answered 200 for every typo.
+    location / {
+        try_files $uri $uri/index.html $uri.html =404;
+    }
+
+    error_page 404 /404.html;
+
+    # Content-hashed build output and font subsets: safe to cache forever.
+    location /_astro/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location /fonts/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Голосовая дуэль. Слэш в конце proxy_pass обязателен: он срезает
+    # префикс, и приложение получает пути от своего корня. Само оно про
+    # /voiceduel не знает - все ссылки внутри относительные.
+    location = /voiceduel { return 301 /voiceduel/; }
+
+    location /voiceduel/ {
+        proxy_pass http://127.0.0.1:3100/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 3600s;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/sp1le.tech/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/sp1le.tech/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = www.sp1le.tech) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    if ($host = sp1le.tech) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    server_name sp1le.tech www.sp1le.tech;
+    return 404; # managed by Certbot
+}
