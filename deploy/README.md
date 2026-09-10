@@ -9,6 +9,7 @@ npm run build
 ## Uploading
 
 The current server block serves the site from `/var/www/portfolio` on the VPS.
+`<vps>` below stands for the host; it is not written down in this repository on purpose.
 
 ```bash
 rsync -avz --delete dist/ root@<vps>:/var/www/portfolio/

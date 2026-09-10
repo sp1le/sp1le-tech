@@ -54,6 +54,7 @@ const builtOn = new Date().toISOString().slice(0, 10);
       <span>© {year} {site.name}</span>
       <span>{t.footerNote[locale]}</span>
       {revision && <span class="tnum">build {revision} · {builtOn}</span>}
+      <a class="transition-colors hover:text-ink" href={site.repo} rel="noopener">{t.sourceNote[locale]} ↗</a>
     </p>
   </div>
 </footer>

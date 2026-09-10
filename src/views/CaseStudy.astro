@@ -80,7 +80,7 @@ const description = project.summary[locale];
 
     {
       shots.length > 0 && (
-        <div class:list={['mt-10 grid gap-4', shots.length > 2 ? 'sm:grid-cols-3' : 'sm:grid-cols-2']}>
+        <div class:list={['mt-10 grid gap-4', shots.length > 2 ? 'sm:grid-cols-3' : shots.length === 2 ? 'sm:grid-cols-2' : '']}>
           {shots.map((shot, i) => (
             <figure class="overflow-hidden rounded-sm border border-rule bg-raise">
               <a
@@ -95,8 +95,8 @@ const description = project.summary[locale];
                 <Image
                   src={shot.src}
                   alt={shot.alt[locale]}
-                  widths={[420, 840, 1200]}
-                  sizes={shots.length > 2 ? '(min-width: 640px) 33vw, 100vw' : '(min-width: 640px) 50vw, 100vw'}
+                  widths={shots.length === 1 ? [720, 1200, 1440] : [420, 840, 1200]}
+                  sizes={shots.length > 2 ? '(min-width: 640px) 33vw, 100vw' : shots.length === 2 ? '(min-width: 640px) 50vw, 100vw' : '(min-width: 1248px) 1184px, 94vw'}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   class="w-full object-cover object-top transition-opacity group-hover:opacity-90"

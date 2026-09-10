@@ -11,6 +11,7 @@ export const site = {
   telegramLabel: '@decimal128',
   linkedin: 'https://www.linkedin.com/in/dmitry-stasyuk-996aba424/',
   linkedinLabel: 'LinkedIn',
+  repo: 'https://github.com/sp1le/sp1le-tech',
   /** Ordered: the first entry is the one I want people to use. */
   role: {
     en: 'Full-cycle software engineer',

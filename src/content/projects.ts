@@ -3,6 +3,10 @@ import type { Localized } from '~/lib/i18n';
 import tandyrCatalog from '~/assets/img/tandyr-catalog.png';
 import tandyrCheckout from '~/assets/img/tandyr-checkout.png';
 import tandyrBot from '~/assets/img/tandyr-bot.png';
+import replydeckLanding from '~/assets/img/replydeck-landing.png';
+import replydeckChats from '~/assets/img/replydeck-chats.png';
+import replydeckStats from '~/assets/img/replydeck-stats.png';
+import voiceduelEntry from '~/assets/img/voiceduel-entry.png';
 
 /**
  * Four states, and the palette maps onto them:
@@ -150,6 +154,30 @@ export const projects: Project[] = [
       en: 'I named it Sonar and built a landing page, an offer and a domain around that name before opening the trademark register. SonarSource owns SONAR for software, so the product became ReplyDeck before it met a single paying customer. A cheap lesson only because it was learned early: the register comes before the domain. The thing I would keep exactly as it is: the tenancy guard with its own test module, because isolation that lives in application code has to be proven, not assumed.',
       uk: 'Я назвав його Sonar і зібрав навколо цієї назви лендинг, оферту й домен раніше, ніж відкрив реєстр торгових марок. SonarSource володіє маркою SONAR для софту, тож продукт став ReplyDeck до того, як зустрів першого платного клієнта. Урок дешевий лише тому, що вивчений рано: спочатку реєстр, потім домен. Що лишив би точно як є: вартовий тенантності з окремим тестовим модулем, бо ізоляцію, яка живе в коді застосунку, треба доводити, а не припускати.',
     },
+    // Local build with seeded demo data (scripts/seed_demo.py): the names and numbers are synthetic, the screens are real.
+    shots: [
+      {
+        src: replydeckLanding,
+        alt: {
+          en: 'ReplyDeck landing page: "Your customers are already writing about their need. Just not to you."',
+          uk: 'Лендинг ReplyDeck: «Клієнти вже пишуть про свою потребу. Просто не вам.»',
+        },
+      },
+      {
+        src: replydeckChats,
+        alt: {
+          en: 'Chats screen: twelve lead dialogues with channel, funnel stage, source chat and last message',
+          uk: 'Екран чатів: дванадцять діалогів із лідами, канал, етап воронки, чат-джерело та останнє повідомлення',
+        },
+      },
+      {
+        src: replydeckStats,
+        alt: {
+          en: 'Statistics: scanned messages, funnel from read to hot lead, live monitoring log and scout accounts',
+          uk: 'Статистика: відскановані повідомлення, воронка від прочитаного до гарячого ліда, живий лог моніторингу та акаунти-скаути',
+        },
+      },
+    ],
   },
 
   {
@@ -501,6 +529,15 @@ private static void BuildRamp(Transform parent, Vector3 start, Vector3 dir, Vect
     },
     href: 'https://sp1le.tech/voiceduel',
     hrefLabel: 'sp1le.tech/voiceduel',
+    shots: [
+      {
+        src: voiceduelEntry,
+        alt: {
+          en: 'Voice Duel entry screen, live: sign in or register, a microphone check, and the one rule of the game',
+          uk: 'Вхідний екран Voice Duel наживо: вхід або реєстрація, перевірка мікрофона й єдине правило гри',
+        },
+      },
+    ],
   },
 
 ];
