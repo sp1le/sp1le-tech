@@ -4,9 +4,11 @@ export const site = {
   url: 'https://sp1le.tech',
   name: 'sp1le',
   person: 'Dmytro Stasiuk',
-  email: 'sdsgamessupport@gmail.com',
+  email: 'stasyukdmitriy2602@gmail.com',
   github: 'https://github.com/sp1le',
   githubLabel: 'github.com/sp1le',
+  telegram: 'https://t.me/decimal128',
+  telegramLabel: '@decimal128',
   /** Ordered: the first entry is the one I want people to use. */
   role: {
     en: 'Full-cycle software engineer',

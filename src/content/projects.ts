@@ -1,7 +1,7 @@
 import type { Localized } from '~/lib/i18n';
 
-import sonarDashboard from '~/assets/img/sonar-dashboard.png';
-import sonarAgents from '~/assets/img/sonar-agents.png';
+import replydeckDashboard from '~/assets/img/replydeck-dashboard.png';
+import replydeckAgents from '~/assets/img/replydeck-agents.png';
 import tandyrCatalog from '~/assets/img/tandyr-catalog.png';
 import tandyrCheckout from '~/assets/img/tandyr-checkout.png';
 import tandyrBot from '~/assets/img/tandyr-bot.png';
@@ -57,8 +57,8 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    slug: 'sonar',
-    name: 'Sonar',
+    slug: 'replydeck',
+    name: 'ReplyDeck',
     period: '2026',
     status: 'building',
     kind: { en: 'Multi-tenant B2B SaaS', uk: 'Мультитенантний B2B SaaS' },
@@ -68,8 +68,8 @@ export const projects: Project[] = [
       uk: 'Пошук і опрацювання лідів для команд. Друга ітерація; перша працювала в проді й була продана.',
     },
     intro: {
-      en: 'A platform where a customer organisation runs its own fleet of Telegram accounts, watches public chats for the language its buyers actually use, and turns matches into qualified leads with an outreach trail attached. The first version of this codebase served real tenants at logger.sp1le.tech before I sold it. Sonar is the rebuild, and it is not finished.',
-      uk: 'Платформа, де організація-клієнт тримає власний парк Telegram-акаунтів, стежить за публічними чатами на предмет формулювань, якими говорять її покупці, і перетворює збіги на кваліфіковані ліди з історією комунікації. Перша версія цієї кодової бази обслуговувала реальних клієнтів на logger.sp1le.tech, доки я її не продав. Sonar - це переписування, і воно ще не завершене.',
+      en: 'A platform where a customer organisation runs its own fleet of Telegram accounts, watches public chats for the language its buyers actually use, and turns matches into qualified leads with an outreach trail attached. The first version of this codebase served real tenants at logger.sp1le.tech before I sold it. ReplyDeck is the rebuild, and it is not finished.',
+      uk: 'Платформа, де організація-клієнт тримає власний парк Telegram-акаунтів, стежить за публічними чатами на предмет формулювань, якими говорять її покупці, і перетворює збіги на кваліфіковані ліди з історією комунікації. Перша версія цієї кодової бази обслуговувала реальних клієнтів на logger.sp1le.tech, доки я її не продав. ReplyDeck - це переписування, і воно ще не завершене.',
     },
     constraint: {
       en: 'Many separate customer organisations, each with its own Telegram accounts and its own secrets, all on one modest VPS - with nothing leaking sideways between them. And I am the only person on call for it.',
@@ -149,14 +149,14 @@ export const projects: Project[] = [
     },
     shots: [
       {
-        src: sonarDashboard,
+        src: replydeckDashboard,
         alt: {
-          en: 'Sonar dashboard: lead feed, per-tenant account fleet and scan quota',
-          uk: 'Дашборд Sonar: стрічка лідів, парк акаунтів клієнта та квота сканування',
+          en: 'ReplyDeck dashboard: lead feed, per-tenant account fleet and scan quota',
+          uk: 'Дашборд ReplyDeck: стрічка лідів, парк акаунтів клієнта та квота сканування',
         },
       },
       {
-        src: sonarAgents,
+        src: replydeckAgents,
         alt: {
           en: 'Agent management screen with connected Telegram accounts and their state',
           uk: 'Екран керування агентами з підключеними Telegram-акаунтами та їхнім станом',
@@ -567,6 +567,6 @@ export function projectBySlug(slug: string): Project | undefined {
 /** Three decisions pulled onto the home page, chosen for how much they give away about how I think. */
 export const highlightedDecisions: { slug: string; index: number }[] = [
   { slug: 'getaway', index: 0 },
-  { slug: 'sonar', index: 0 },
+  { slug: 'replydeck', index: 0 },
   { slug: 'voice-duel', index: 2 },
 ];
